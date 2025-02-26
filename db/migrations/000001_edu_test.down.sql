@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS students_result;
+DROP TABLE IF EXISTS cheack_questions;
+DROP TABLE IF EXISTS template_questions;
+DROP TABLE IF EXISTS templates;
+DROP TABLE IF EXISTS questions;
+DROP TABLE IF EXISTS student_subjects;
+DROP TABLE IF EXISTS subjects;
+DROP TABLE IF EXISTS students;

@@ -1,0 +1,7 @@
+{"time":"2025-02-14T18:46:00.715913194+05:00","level":"INFO","msg":"ba07a8aa-5331-4802-b9b6-085729806430"}
+{"time":"2025-02-14T18:46:52.024806323+05:00","level":"INFO","msg":"&{[]}"}
+{"time":"2025-02-14T21:12:12.27438266+05:00","level":"INFO","msg":"&{[{2b431eb9-4d53-4a3d-af51-0575170d40c9} {a94181fe-3bd7-4035-8a97-8081b99f7458} {50564ed4-084d-4ab1-b69c-486a8d2a1642} {5f484e7b-6000-441d-aa35-dbb7d0a69364}]}"}
+{"time":"2025-02-14T21:12:12.274897456+05:00","level":"ERROR","msg":"Error is get answers of template: sql: no rows in result set"}
+{"time":"2025-02-14T21:12:12.274935276+05:00","level":"ERROR","msg":"Error is get answers: sql: no rows in result set"}
+{"time":"2025-02-14T21:12:12.274940271+05:00","level":"ERROR","msg":"Error is service function CheckStudentTest: sql: no rows in result set"}
+{"time":"2025-02-15T12:32:24.831191608+05:00","level":"INFO","msg":"&{[{94d83bab-f22f-404c-b6db-230c522d402e}]}"}

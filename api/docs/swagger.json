@@ -1,0 +1,852 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/questions": {
+            "get": {
+                "description": "Berilgan ID yoki fan ID bo‘yicha savollarni olish",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Savollarni olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Savol IDsi",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fan IDsi",
+                        "name": "subject_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Savol turi",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetQuestionsResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/create": {
+            "post": {
+                "description": "Yangi savol qo'shish uchun API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Yangi savol yaratish",
+                "parameters": [
+                    {
+                        "description": "Savol yaratish ma'lumotlari",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateQuestionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/delete/{id}": {
+            "delete": {
+                "description": "Berilgan ID bo‘yicha savolni o‘chirish",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Savolni o‘chirish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Savol IDsi",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/update/{id}": {
+            "put": {
+                "description": "Berilgan ID bo‘yicha savolni yangilash",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Savolni yangilash",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Savol IDsi",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Savolni yangilash ma'lumotlari",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateQuestionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/students": {
+            "get": {
+                "description": "Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish",
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Talabalar ma'lumotlarini olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Talabaning unikal ID'si (Majburiy emas, agar berilmasa barcha talabalar qaytariladi)",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Talabalar ma'lumotlari",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetStudentsResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/create": {
+            "post": {
+                "description": "Yangi talabani ro‘yxatga olish",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Talaba yaratish",
+                "parameters": [
+                    {
+                        "description": "Talaba ma'lumotlari",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateStudentReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateStudentResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Noto'g'ri ma'lumot kiritildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/delete/{id}": {
+            "delete": {
+                "description": "Berilgan ID bo‘yicha talabani o‘chirish",
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Talabani o'chirish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Talabaning unikal ID'si",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Muvaffaqiyatli o‘chirildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/update/{id}": {
+            "put": {
+                "description": "Berilgan ID bo‘yicha talabani yangilash",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Talaba ma'lumotlarini yangilash",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Talabaning unikal ID'si",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Yangilangan talaba ma'lumotlari",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateStudentReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Muvaffaqiyatli yangilandi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "400": {
+                        "description": "Noto'g'ri ma'lumot kiritildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects": {
+            "get": {
+                "description": "Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi",
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Fan(lar) ma'lumotlarini olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fanlar ma'lumotlari",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetSubjectsResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/create": {
+            "post": {
+                "description": "Yangi fan qo‘shish",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Fan yaratish",
+                "parameters": [
+                    {
+                        "description": "Yangi fan ma'lumotlari",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateSubjectReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Muvaffaqiyatli qo‘shildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "400": {
+                        "description": "Noto'g'ri ma'lumot kiritildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/delete/{id}": {
+            "delete": {
+                "description": "Berilgan ID bo‘yicha fanni o‘chirish",
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Fan o'chirish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fan ID'si",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Muvaffaqiyatli o‘chirildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/templates/check": {
+            "post": {
+                "description": "Ushbu endpoint talabaga tegishli test javoblarini tekshirish uchun ishlatiladi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Talabaning test natijalarini tekshirish",
+                "parameters": [
+                    {
+                        "description": "Talabaning test javoblarini tekshirish uchun ma'lumot",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CheckStudentTestReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Test natijalari muvaffaqiyatli tekshirildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Result"
+                        }
+                    },
+                    "400": {
+                        "description": "Noto'g'ri ma'lumot kiritildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/templates/create": {
+            "post": {
+                "description": "Yangi test template yaratish",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Template yaratish",
+                "parameters": [
+                    {
+                        "description": "Template ma'lumotlari",
+                        "name": "template",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CreateTemplateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Muvaffaqiyatli yaratildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "400": {
+                        "description": "Noto'g'ri ma'lumot kiritildi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.CheckStudentTestReq": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.QuestionAnswer"
+                    }
+                },
+                "day": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateQuestionReq": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "answer_image_url": {
+                    "type": "string"
+                },
+                "option)image_url": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "options": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "question_image_url": {
+                    "type": "string"
+                },
+                "question_text": {
+                    "type": "string"
+                },
+                "subject_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateStudentReq": {
+            "type": "object",
+            "properties": {
+                "lastname": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "subject1": {
+                    "type": "string"
+                },
+                "subject2": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateStudentResp": {
+            "type": "object",
+            "properties": {
+                "student_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateSubjectReq": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CreateTemplateReq": {
+            "type": "object",
+            "properties": {
+                "day": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Error": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.GetQuestionsResp": {
+            "type": "object",
+            "properties": {
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Question"
+                    }
+                }
+            }
+        },
+        "model.GetStudentsResp": {
+            "type": "object",
+            "properties": {
+                "students": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Student"
+                    }
+                }
+            }
+        },
+        "model.GetSubjectsResp": {
+            "type": "object",
+            "properties": {
+                "subjects": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Subject"
+                    }
+                }
+            }
+        },
+        "model.Option": {
+            "type": "object",
+            "properties": {
+                "a": {
+                    "type": "string"
+                },
+                "b": {
+                    "type": "string"
+                },
+                "c": {
+                    "type": "string"
+                },
+                "d": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Question": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "answer_image_url": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "option_image_url": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "options": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "question_image_url": {
+                    "type": "string"
+                },
+                "question_text": {
+                    "type": "string"
+                },
+                "subject_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.QuestionAnswer": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Result": {
+            "type": "object",
+            "properties": {
+                "correct": {
+                    "type": "integer"
+                },
+                "incorrect": {
+                    "type": "integer"
+                },
+                "percent": {
+                    "type": "number"
+                }
+            }
+        },
+        "model.Status": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Student": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "subject1": {
+                    "type": "string"
+                },
+                "subject2": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Subject": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UpdateQuestionReq": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "answer_image_url": {
+                    "type": "string"
+                },
+                "option)image_url": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "options": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "question_image_url": {
+                    "type": "string"
+                },
+                "question_text": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.UpdateStudentReq": {
+            "type": "object",
+            "properties": {
+                "lastname": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
+                },
+                "subject1": {
+                    "type": "string"
+                },
+                "subject2": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

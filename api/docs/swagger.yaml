@@ -1,0 +1,555 @@
+definitions:
+  model.CheckStudentTestReq:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/model.QuestionAnswer'
+        type: array
+      day:
+        type: string
+      student_id:
+        type: string
+    type: object
+  model.CreateQuestionReq:
+    properties:
+      answer:
+        type: string
+      answer_image_url:
+        type: string
+      option)image_url:
+        $ref: '#/definitions/model.Option'
+      options:
+        $ref: '#/definitions/model.Option'
+      question_image_url:
+        type: string
+      question_text:
+        type: string
+      subject_id:
+        type: string
+      type:
+        type: string
+    type: object
+  model.CreateStudentReq:
+    properties:
+      lastname:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      subject1:
+        type: string
+      subject2:
+        type: string
+    type: object
+  model.CreateStudentResp:
+    properties:
+      student_id:
+        type: string
+    type: object
+  model.CreateSubjectReq:
+    properties:
+      name:
+        type: string
+    type: object
+  model.CreateTemplateReq:
+    properties:
+      day:
+        type: string
+      student_id:
+        type: string
+    type: object
+  model.Error:
+    properties:
+      message:
+        type: string
+    type: object
+  model.GetQuestionsResp:
+    properties:
+      questions:
+        items:
+          $ref: '#/definitions/model.Question'
+        type: array
+    type: object
+  model.GetStudentsResp:
+    properties:
+      students:
+        items:
+          $ref: '#/definitions/model.Student'
+        type: array
+    type: object
+  model.GetSubjectsResp:
+    properties:
+      subjects:
+        items:
+          $ref: '#/definitions/model.Subject'
+        type: array
+    type: object
+  model.Option:
+    properties:
+      a:
+        type: string
+      b:
+        type: string
+      c:
+        type: string
+      d:
+        type: string
+    type: object
+  model.Question:
+    properties:
+      answer:
+        type: string
+      answer_image_url:
+        type: string
+      id:
+        type: string
+      option_image_url:
+        $ref: '#/definitions/model.Option'
+      options:
+        $ref: '#/definitions/model.Option'
+      question_image_url:
+        type: string
+      question_text:
+        type: string
+      subject_id:
+        type: string
+      type:
+        type: string
+    type: object
+  model.QuestionAnswer:
+    properties:
+      answer:
+        type: string
+      number:
+        type: integer
+    type: object
+  model.Result:
+    properties:
+      correct:
+        type: integer
+      incorrect:
+        type: integer
+      percent:
+        type: number
+    type: object
+  model.Status:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Student:
+    properties:
+      id:
+        type: string
+      lastname:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      student_id:
+        type: string
+      subject1:
+        type: string
+      subject2:
+        type: string
+    type: object
+  model.Subject:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  model.UpdateQuestionReq:
+    properties:
+      answer:
+        type: string
+      answer_image_url:
+        type: string
+      option)image_url:
+        $ref: '#/definitions/model.Option'
+      options:
+        $ref: '#/definitions/model.Option'
+      question_image_url:
+        type: string
+      question_text:
+        type: string
+      type:
+        type: string
+    type: object
+  model.UpdateStudentReq:
+    properties:
+      lastname:
+        type: string
+      name:
+        type: string
+      phone_number:
+        type: string
+      subject1:
+        type: string
+      subject2:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /questions:
+    get:
+      description: Berilgan ID yoki fan ID bo‘yicha savollarni olish
+      parameters:
+      - description: Savol IDsi
+        in: query
+        name: id
+        type: string
+      - description: Fan IDsi
+        in: query
+        name: subject_id
+        type: string
+      - description: Savol turi
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetQuestionsResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Savollarni olish
+      tags:
+      - Questions
+  /questions/create:
+    post:
+      consumes:
+      - application/json
+      description: Yangi savol qo'shish uchun API
+      parameters:
+      - description: Savol yaratish ma'lumotlari
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateQuestionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Status'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Yangi savol yaratish
+      tags:
+      - Questions
+  /questions/delete/{id}:
+    delete:
+      description: Berilgan ID bo‘yicha savolni o‘chirish
+      parameters:
+      - description: Savol IDsi
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Savolni o‘chirish
+      tags:
+      - Questions
+  /questions/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Berilgan ID bo‘yicha savolni yangilash
+      parameters:
+      - description: Savol IDsi
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Savolni yangilash ma'lumotlari
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateQuestionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Status'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Savolni yangilash
+      tags:
+      - Questions
+  /students:
+    get:
+      description: Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish
+      parameters:
+      - description: Talabaning unikal ID'si (Majburiy emas, agar berilmasa barcha
+          talabalar qaytariladi)
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: Talabalar ma'lumotlari
+          schema:
+            $ref: '#/definitions/model.GetStudentsResp'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talabalar ma'lumotlarini olish
+      tags:
+      - Students
+  /students/create:
+    post:
+      consumes:
+      - application/json
+      description: Yangi talabani ro‘yxatga olish
+      parameters:
+      - description: Talaba ma'lumotlari
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateStudentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.CreateStudentResp'
+        "400":
+          description: Noto'g'ri ma'lumot kiritildi
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talaba yaratish
+      tags:
+      - Students
+  /students/delete/{id}:
+    delete:
+      description: Berilgan ID bo‘yicha talabani o‘chirish
+      parameters:
+      - description: Talabaning unikal ID'si
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Muvaffaqiyatli o‘chirildi
+          schema:
+            $ref: '#/definitions/model.Status'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talabani o'chirish
+      tags:
+      - Students
+  /students/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Berilgan ID bo‘yicha talabani yangilash
+      parameters:
+      - description: Talabaning unikal ID'si
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Yangilangan talaba ma'lumotlari
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateStudentReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Muvaffaqiyatli yangilandi
+          schema:
+            $ref: '#/definitions/model.Status'
+        "400":
+          description: Noto'g'ri ma'lumot kiritildi
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talaba ma'lumotlarini yangilash
+      tags:
+      - Students
+  /subjects:
+    get:
+      description: Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi
+      parameters:
+      - description: Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: Fanlar ma'lumotlari
+          schema:
+            $ref: '#/definitions/model.GetSubjectsResp'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Fan(lar) ma'lumotlarini olish
+      tags:
+      - Subjects
+  /subjects/create:
+    post:
+      consumes:
+      - application/json
+      description: Yangi fan qo‘shish
+      parameters:
+      - description: Yangi fan ma'lumotlari
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateSubjectReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Muvaffaqiyatli qo‘shildi
+          schema:
+            $ref: '#/definitions/model.Status'
+        "400":
+          description: Noto'g'ri ma'lumot kiritildi
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Fan yaratish
+      tags:
+      - Subjects
+  /subjects/delete/{id}:
+    delete:
+      description: Berilgan ID bo‘yicha fanni o‘chirish
+      parameters:
+      - description: Fan ID'si
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Muvaffaqiyatli o‘chirildi
+          schema:
+            $ref: '#/definitions/model.Status'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Fan o'chirish
+      tags:
+      - Subjects
+  /templates/check:
+    post:
+      consumes:
+      - application/json
+      description: Ushbu endpoint talabaga tegishli test javoblarini tekshirish uchun
+        ishlatiladi
+      parameters:
+      - description: Talabaning test javoblarini tekshirish uchun ma'lumot
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CheckStudentTestReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Test natijalari muvaffaqiyatli tekshirildi
+          schema:
+            $ref: '#/definitions/model.Result'
+        "400":
+          description: Noto'g'ri ma'lumot kiritildi
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talabaning test natijalarini tekshirish
+      tags:
+      - Templates
+  /templates/create:
+    post:
+      consumes:
+      - application/json
+      description: Yangi test template yaratish
+      parameters:
+      - description: Template ma'lumotlari
+        in: body
+        name: template
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateTemplateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Muvaffaqiyatli yaratildi
+          schema:
+            $ref: '#/definitions/model.Status'
+        "400":
+          description: Noto'g'ri ma'lumot kiritildi
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Template yaratish
+      tags:
+      - Templates
+swagger: "2.0"
