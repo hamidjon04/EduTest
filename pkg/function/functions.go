@@ -2,7 +2,10 @@ package function
 
 import (
 	"edutest/pkg/model"
+	"fmt"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -31,4 +34,23 @@ func RandomOptions(questions []model.Question) ([]model.Question, map[int]string
 	}
 
 	return questions, answers
+}
+
+func ReadPDFFile(fileID string) ([]byte, error) {
+	// Loyihaning root papkasidan to‘liq yo‘lni olish
+	basePath, err := filepath.Abs("storage/pdfs")
+	if err != nil {
+		return nil, fmt.Errorf("bazaviy yo‘lni aniqlab bo‘lmadi: %v", err)
+	}
+
+	// To‘liq fayl yo‘lini yaratish
+	filePath := filepath.Join(basePath, fmt.Sprintf("%v.pdf", fileID))
+
+	// Faylni o‘qish
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("faylni o‘qishda xatolik: %v", err)
+	}
+
+	return file, nil
 }

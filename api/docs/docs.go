@@ -357,6 +357,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/students/{student_id}/result": {
+            "get": {
+                "description": "Retrieves the result of a student based on student_id and template_id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Get student result",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Student ID",
+                        "name": "student_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Template ID",
+                        "name": "template_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetStudentResultResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/subjects": {
             "get": {
                 "description": "Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi",
@@ -557,6 +601,57 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/templates/get": {
+            "get": {
+                "description": "Student ID va sana bo‘yicha shablonni yuklab olish",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Student shablonini yuklab olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Talaba ID",
+                        "name": "student_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Kun (YYYY-MM-DD format)",
+                        "name": "day",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Shablon fayli",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Xato so‘rov",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Server xatosi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -672,6 +767,17 @@ const docTemplate = `{
                 }
             }
         },
+        "model.GetStudentResultResp": {
+            "type": "object",
+            "properties": {
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StudentResult"
+                    }
+                }
+            }
+        },
         "model.GetStudentsResp": {
             "type": "object",
             "properties": {
@@ -754,6 +860,17 @@ const docTemplate = `{
                 }
             }
         },
+        "model.QuestionResult": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
         "model.Result": {
             "type": "object",
             "properties": {
@@ -798,6 +915,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "subject2": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.StudentResult": {
+            "type": "object",
+            "properties": {
+                "ball": {
+                    "type": "number"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.QuestionResult"
+                    }
+                },
+                "template_id": {
                     "type": "string"
                 }
             }

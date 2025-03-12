@@ -177,3 +177,30 @@ type Result struct {
 	InCorrect int     `json:"incorrect"`
 	Percent   float64 `json:"percent"`
 }
+
+type QuestionResult struct {
+	Number int `json:"number"`
+	Status bool   `json:"status"`
+}
+
+type CreateStudentResultReq struct {
+	StudentId  string           `json:"student_id"`
+	Results    []QuestionResult `json:"results"`
+	Point      float64          `json:"point"`
+	TemplateId string           `json:"template_id"`
+}
+
+type GetStudentResultReq struct {
+	StudentId  string `json:"student_id"`
+	TemplateId string `json:"template_id"`
+}
+
+type StudentResult struct {
+	TemplateId string           `json:"template_id"`
+	Result     []QuestionResult `json:"result"`
+	Ball       float64          `json:"ball"`
+}
+
+type GetStudentResultResp struct {
+	Results []StudentResult `json:"results"`
+}

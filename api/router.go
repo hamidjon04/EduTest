@@ -2,18 +2,20 @@ package api
 
 import (
 	"edutest/api/handler"
+	"edutest/api/middleware"
 	"edutest/service"
 	"log/slog"
 
 	_ "edutest/api/docs"
 
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 )
 
 func Router(service service.Service, log *slog.Logger) *gin.Engine {
 	router := gin.Default()
+	router.Use(middleware.CORSMiddleware())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	h := handler.NewHandler(service, log)
 
@@ -23,6 +25,7 @@ func Router(service service.Service, log *slog.Logger) *gin.Engine {
 		students.PUT("/update/:id", h.UpdateStudent)
 		students.DELETE("/delete/:id", h.DeleteStudent)
 		students.GET("", h.GetStudents)
+		students.GET("/:student_id/result", h.GetStudentResult)
 	}
 
 	subjects := router.Group("/subjects")
@@ -44,6 +47,7 @@ func Router(service service.Service, log *slog.Logger) *gin.Engine {
 	{
 		templates.POST("/create", h.CreateTemplate)
 		templates.POST("/check", h.CheckStudentTest)
+		templates.GET("/get", h.GetStudentTemplate)
 	}
 
 	return router

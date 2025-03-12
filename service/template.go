@@ -44,7 +44,7 @@ func (S *Service) CreateTemplate(ctx context.Context, req *model.CreateTemplateR
 			QuesttionId: questions[i].Id,
 			Number:      i + 1,
 		})
-		if err != nil{
+		if err != nil {
 			S.Log.Error(fmt.Sprintf("Error is create question of template: %v", err))
 			return nil
 		}
@@ -68,7 +68,7 @@ func (S *Service) CreateTemplate(ctx context.Context, req *model.CreateTemplateR
 		TemplateId: id,
 		Subject1:   student.Students[0].Subject1,
 		Subject2:   student.Students[0].Subject2,
-		Questions: questions,
+		Questions:  questions,
 	})
 	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is create pdf file: %v", err))
@@ -77,35 +77,91 @@ func (S *Service) CreateTemplate(ctx context.Context, req *model.CreateTemplateR
 	return nil
 }
 
-func(S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentTestReq)(*model.Result, error){
+func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentTestReq) (*model.Result, error) {
 	student, err := S.Storage.Student().GetStudentByStringId(req.StudentId)
-	if err != nil{
+	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get student: %v", err))
 		return nil, err
 	}
-	template, err := S.Storage.Template().GetTemplates(&model.GetTemplatesReq{
-		StudentId: student.Id,
-		Day: req.Day,
-	})
-	if err != nil{
+	templateId, err := S.Storage.Template().GetTemplate(student.Id, req.Day)
+	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get student's template: %v", err))
 		return nil, err
 	}
-	S.Log.Info(fmt.Sprintf("%v", template))
-	answers, err := S.Storage.Template().GetTemplateAnswer(template.Templates[0].Id)
-	if err != nil{
+	answers, err := S.Storage.Template().GetTemplateAnswer(templateId)
+	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get answers: %v", err))
 		return nil, err
 	}
 
 	var result model.Result
-	for _, j := range req.Answers{
-		if answers[j.Number] == j.Answer{
-			result.Correct++
-		}else{
-			result.InCorrect++
+	var results []model.QuestionResult
+	var numbers = make(map[int]bool)
+	var point float64
+	for _, j := range req.Answers {
+		var questionResult = model.QuestionResult{
+			Number: j.Number,
 		}
+		if answers[j.Number] == j.Answer {
+			result.Correct++
+			questionResult.Status = true
+			if j.Number <= 30 {
+				point += 3.1
+			} else if j.Number > 30 && j.Number <= 60 {
+				point += 2.1
+			}
+		} else {
+			result.InCorrect++
+			questionResult.Status = false
+		}
+		results = append(results, questionResult)
+		numbers[j.Number] = true
 	}
-	result.Percent = float64(result.Correct)/float64(len(answers))
+
+	for i := 1; i <= len(answers); i++ {
+		var questionResult = model.QuestionResult{
+			Number: i,
+		}
+		if !numbers[i] {
+			questionResult.Status = false
+		}
+		results = append(results, questionResult)
+	}
+
+	err = S.Storage.Student().CreateStudentResult(&model.CreateStudentResultReq{
+		StudentId:  student.Id,
+		TemplateId: templateId,
+		Results:    results,
+		Point:      point,
+	})
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is save student's result: %v", err))
+	}
+
+	result.Percent = float64(result.Correct) / float64(len(answers))
 	return &result, nil
+}
+
+func (S *Service) GetStudentTemplates(ctx context.Context, req *model.GetTemplatesReq) (*[]byte, error) {
+	templates, err := S.Storage.Template().GetTemplates(req)
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is get templates: %v", err))
+		return nil, err
+	}
+
+	file, err := function.ReadPDFFile(templates.Templates[0].Id)
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is get pdf of template: %v", err))
+		return nil, err
+	}
+	return &file, nil
+}
+
+func (S *Service) GetStudentResult(ctx context.Context, req *model.GetStudentResultReq) (*model.GetStudentResultResp, error) {
+	resp, err := S.Storage.Student().GetStudentResult(req)
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is get student's result: %v", err))
+		return nil, err
+	}
+	return resp, nil
 }

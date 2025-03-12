@@ -104,3 +104,27 @@ func (h *Handler) GetStudents(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, resp)
 }
+
+// @Summary Get student result
+// @Description Retrieves the result of a student based on student_id and template_id
+// @Tags Students
+// @Accept  json
+// @Produce  json
+// @Param student_id path string true "Student ID"
+// @Param template_id query string false "Template ID"
+// @Success 200 {object} model.GetStudentResultResp
+// @Failure 500 {object} model.Error "Serverda xatolik"
+// @Router /students/{student_id}/result [get]
+func (h *Handler) GetStudentResult(c *gin.Context){
+	req := model.GetStudentResultReq{
+		StudentId: c.Param("student_id"),
+		TemplateId: c.Query("template_id"),
+	}
+	resp, err := h.Service.GetStudentResult(c, &req)
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is service function GetStudentResult: %v", err))
+		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}

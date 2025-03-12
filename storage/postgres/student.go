@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"edutest/pkg/model"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 
@@ -15,6 +16,8 @@ type StudentRepo interface {
 	DeleteStudent(req *model.StudentId) error
 	GetStudents(req *model.StudentId) (*model.GetStudentsResp, error)
 	GetStudentByStringId(id string) (*model.Student, error)
+	CreateStudentResult(req *model.CreateStudentResultReq) error
+	GetStudentResult(req *model.GetStudentResultReq) (*model.GetStudentResultResp, error) 
 }
 
 type studentImpl struct {
@@ -183,9 +186,69 @@ func (S *studentImpl) GetStudentByStringId(id string) (*model.Student, error) {
 				WHERE 
 					student_id = $1`
 	err := S.DB.QueryRow(query, id).Scan(&student.Id, &student.Name, &student.Lastname, &student.PhoneNumber)
-	if err != nil{
+	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get student by studentId: %v", err))
 		return nil, err
 	}
 	return &student, nil
+}
+
+func (S *studentImpl) CreateStudentResult(req *model.CreateStudentResultReq) error {
+	result, err := json.Marshal(req.Results)
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is marshal results: %v", err))
+		return err
+	}
+
+	query := `
+				INSERT INTO students_result(
+					student_id, template_id, result, ball)
+				VALUES
+					($1, $2, $3, $4)`
+	_, err = S.DB.Exec(query, req.StudentId, req.TemplateId, result, req.Point)
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is insert student's result: %v", err))
+		return err
+	}
+	return nil
+}
+
+func (S *studentImpl) GetStudentResult(req *model.GetStudentResultReq) (*model.GetStudentResultResp, error) {
+	query := `
+				SELECT
+					template_id, result, ball
+				FROM 
+					students_result
+				WHERE
+					student_id = $1`
+	if len(req.TemplateId) > 0{
+		query += fmt.Sprintf(" AND template_id = '%v'", req.TemplateId)
+	}
+	
+	rows, err := S.DB.Query(query, req.StudentId)
+	if err != nil{
+		S.Log.Error(fmt.Sprintf("Error is get student's results: %v", err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []model.StudentResult
+	for rows.Next() {
+		var result model.StudentResult
+		var subjects []byte
+		err = rows.Scan(&result.TemplateId, &subjects, &result.Ball)
+		if err != nil{
+			S.Log.Error(fmt.Sprintf("Error is scan results: %v", err))
+			return nil, err
+		}
+		err = json.Unmarshal(subjects, &result.Result)
+		if err != nil{
+			S.Log.Error(fmt.Sprintf("Error is unmarshaling result: %v", err))
+			return nil, err
+		}
+		results = append(results, result)
+	}
+	return &model.GetStudentResultResp{
+		Results: results,
+	}, nil
 }

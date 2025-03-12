@@ -17,6 +17,7 @@ type TemplateRepo interface {
 	CreateTemplateQuestion(req *model.CreateTemplateQuestionReq) error
 	CreateTemplateAnswer(req *model.CreateTemplateAnswer) error
 	GetTemplateAnswer(templateId string)(map[int]string, error)
+	GetTemplate(studentId string, day string)(string, error)
 }
 
 type tempImpl struct {
@@ -148,4 +149,21 @@ func (T *tempImpl) GetTemplateAnswer(templateId string)(map[int]string, error){
 		return nil, err
 	}
 	return answers, nil
+}
+
+func (T *tempImpl) GetTemplate(studentId string, day string)(string, error){
+	query := `
+				SELECT 
+					id
+				FROM 
+					templates
+				WHERE 
+					student_id = $1 AND day = $2`
+	var templateId string
+	err := T.DB.QueryRow(query, studentId, day).Scan(&templateId)
+	if err != nil{
+		T.Log.Error(fmt.Sprintf("Error is get template: %v", err))
+		return "", err
+	}
+	return templateId, nil
 }

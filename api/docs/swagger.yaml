@@ -71,6 +71,13 @@ definitions:
           $ref: '#/definitions/model.Question'
         type: array
     type: object
+  model.GetStudentResultResp:
+    properties:
+      results:
+        items:
+          $ref: '#/definitions/model.StudentResult'
+        type: array
+    type: object
   model.GetStudentsResp:
     properties:
       students:
@@ -124,6 +131,13 @@ definitions:
       number:
         type: integer
     type: object
+  model.QuestionResult:
+    properties:
+      number:
+        type: integer
+      status:
+        type: boolean
+    type: object
   model.Result:
     properties:
       correct:
@@ -153,6 +167,17 @@ definitions:
       subject1:
         type: string
       subject2:
+        type: string
+    type: object
+  model.StudentResult:
+    properties:
+      ball:
+        type: number
+      result:
+        items:
+          $ref: '#/definitions/model.QuestionResult'
+        type: array
+      template_id:
         type: string
     type: object
   model.Subject:
@@ -332,6 +357,35 @@ paths:
           schema:
             $ref: '#/definitions/model.Error'
       summary: Talabalar ma'lumotlarini olish
+      tags:
+      - Students
+  /students/{student_id}/result:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the result of a student based on student_id and template_id
+      parameters:
+      - description: Student ID
+        in: path
+        name: student_id
+        required: true
+        type: string
+      - description: Template ID
+        in: query
+        name: template_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.GetStudentResultResp'
+        "500":
+          description: Serverda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Get student result
       tags:
       - Students
   /students/create:
@@ -550,6 +604,40 @@ paths:
           schema:
             $ref: '#/definitions/model.Error'
       summary: Template yaratish
+      tags:
+      - Templates
+  /templates/get:
+    get:
+      consumes:
+      - application/json
+      description: Student ID va sana bo‘yicha shablonni yuklab olish
+      parameters:
+      - description: Talaba ID
+        in: query
+        name: student_id
+        required: true
+        type: string
+      - description: Kun (YYYY-MM-DD format)
+        in: query
+        name: day
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: Shablon fayli
+          schema:
+            type: file
+        "400":
+          description: Xato so‘rov
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Server xatosi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Student shablonini yuklab olish
       tags:
       - Templates
 swagger: "2.0"
