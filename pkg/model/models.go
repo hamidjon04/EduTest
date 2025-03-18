@@ -80,7 +80,7 @@ type CreateQuestionReq struct {
 	Options          Option `json:"options"`
 	Answer           string `json:"answer"`
 	QuestionImageUrl string `json:"question_image_url"`
-	OptionImageUrl   Option `json:"option)image_url"`
+	OptionImageUrl   Option `json:"option_image_url"`
 	AnswerImageUrl   string `json:"answer_image_url"`
 }
 

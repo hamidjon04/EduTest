@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
+	"time"
+	"math/rand"
 
 	"github.com/google/uuid"
 )
@@ -17,7 +19,8 @@ type StudentRepo interface {
 	GetStudents(req *model.StudentId) (*model.GetStudentsResp, error)
 	GetStudentByStringId(id string) (*model.Student, error)
 	CreateStudentResult(req *model.CreateStudentResultReq) error
-	GetStudentResult(req *model.GetStudentResultReq) (*model.GetStudentResultResp, error) 
+	GetStudentResult(req *model.GetStudentResultReq) (*model.GetStudentResultResp, error)
+	StudentCount() int
 }
 
 type studentImpl struct {
@@ -221,12 +224,12 @@ func (S *studentImpl) GetStudentResult(req *model.GetStudentResultReq) (*model.G
 					students_result
 				WHERE
 					student_id = $1`
-	if len(req.TemplateId) > 0{
+	if len(req.TemplateId) > 0 {
 		query += fmt.Sprintf(" AND template_id = '%v'", req.TemplateId)
 	}
-	
+
 	rows, err := S.DB.Query(query, req.StudentId)
-	if err != nil{
+	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get student's results: %v", err))
 		return nil, err
 	}
@@ -237,12 +240,12 @@ func (S *studentImpl) GetStudentResult(req *model.GetStudentResultReq) (*model.G
 		var result model.StudentResult
 		var subjects []byte
 		err = rows.Scan(&result.TemplateId, &subjects, &result.Ball)
-		if err != nil{
+		if err != nil {
 			S.Log.Error(fmt.Sprintf("Error is scan results: %v", err))
 			return nil, err
 		}
 		err = json.Unmarshal(subjects, &result.Result)
-		if err != nil{
+		if err != nil {
 			S.Log.Error(fmt.Sprintf("Error is unmarshaling result: %v", err))
 			return nil, err
 		}
@@ -251,4 +254,24 @@ func (S *studentImpl) GetStudentResult(req *model.GetStudentResultReq) (*model.G
 	return &model.GetStudentResultResp{
 		Results: results,
 	}, nil
+}
+
+func (S *studentImpl) StudentCount() int {
+	var count int
+	query := `
+				SELECT
+					count(1)
+				FROM 
+					students`
+	err := S.DB.QueryRow(query).Scan(&count)
+	if err != nil {
+		S.Log.Error(fmt.Sprintf("Error is get count of students: %v", err))
+
+		src := rand.NewSource(time.Now().UnixNano())
+		r := rand.New(src)
+
+		randomNumber := r.Intn(100000)
+		return randomNumber
+	}
+	return count
 }

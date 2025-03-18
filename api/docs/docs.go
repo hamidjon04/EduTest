@@ -681,7 +681,7 @@ const docTemplate = `{
                 "answer_image_url": {
                     "type": "string"
                 },
-                "option)image_url": {
+                "option_image_url": {
                     "$ref": "#/definitions/model.Option"
                 },
                 "options": {
