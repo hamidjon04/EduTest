@@ -474,26 +474,6 @@ paths:
       summary: Talaba ma'lumotlarini yangilash
       tags:
       - Students
-  /subjects:
-    get:
-      description: Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi
-      parameters:
-      - description: Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)
-        in: query
-        name: id
-        type: string
-      responses:
-        "200":
-          description: Fanlar ma'lumotlari
-          schema:
-            $ref: '#/definitions/model.GetSubjectsResp'
-        "500":
-          description: Serverda xatolik yuz berdi
-          schema:
-            $ref: '#/definitions/model.Error'
-      summary: Fan(lar) ma'lumotlarini olish
-      tags:
-      - Subjects
   /subjects/create:
     post:
       consumes:
@@ -543,6 +523,26 @@ paths:
           schema:
             $ref: '#/definitions/model.Error'
       summary: Fan o'chirish
+      tags:
+      - Subjects
+  /subjects/get:
+    get:
+      description: Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi
+      parameters:
+      - description: Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: Fanlar ma'lumotlari
+          schema:
+            $ref: '#/definitions/model.GetSubjectsResp'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Fan(lar) ma'lumotlarini olish
       tags:
       - Subjects
   /templates/check:

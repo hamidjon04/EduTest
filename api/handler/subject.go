@@ -59,7 +59,7 @@ func (h *Handler) DeleteSubject(c *gin.Context){
 // @Param id query string false "Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)"
 // @Success 200 {object} model.GetSubjectsResp "Fanlar ma'lumotlari"
 // @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
-// @Router /subjects [get]
+// @Router /subjects/get [get]
 func (h *Handler) GetSubjects(c *gin.Context){
 	resp, err := h.Service.GetSubjects(c, c.Query("id"))
 	if err != nil{

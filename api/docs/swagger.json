@@ -390,37 +390,6 @@
                 }
             }
         },
-        "/subjects": {
-            "get": {
-                "description": "Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi",
-                "tags": [
-                    "Subjects"
-                ],
-                "summary": "Fan(lar) ma'lumotlarini olish",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)",
-                        "name": "id",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Fanlar ma'lumotlari",
-                        "schema": {
-                            "$ref": "#/definitions/model.GetSubjectsResp"
-                        }
-                    },
-                    "500": {
-                        "description": "Serverda xatolik yuz berdi",
-                        "schema": {
-                            "$ref": "#/definitions/model.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/subjects/create": {
             "post": {
                 "description": "Yangi fan qo‘shish",
@@ -488,6 +457,37 @@
                         "description": "Muvaffaqiyatli o‘chirildi",
                         "schema": {
                             "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/get": {
+            "get": {
+                "description": "Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi",
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Fan(lar) ma'lumotlarini olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fanlar ma'lumotlari",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetSubjectsResp"
                         }
                     },
                     "500": {

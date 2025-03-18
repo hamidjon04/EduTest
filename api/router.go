@@ -32,7 +32,7 @@ func Router(service service.Service, log *slog.Logger) *gin.Engine {
 	{
 		subjects.POST("/create", h.CerateSubject)
 		subjects.DELETE("/delete/:id", h.DeleteSubject)
-		subjects.GET("", h.GetSubjects)
+		subjects.GET("/get", h.GetSubjects)
 	}
 
 	questions := router.Group("/questions")

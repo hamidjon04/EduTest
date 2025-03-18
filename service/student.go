@@ -8,7 +8,7 @@ import (
 )
 
 func (S *Service) CreateStudent(ctx context.Context, req *model.CreateStudentReq) (*model.CreateStudentResp, error) {
-	studentId := S.Storage.Student().StudentCount() + 1
+	studentId := S.Storage.Student().StudentCount() + 200001
 	req.StudentId = strconv.Itoa(studentId)
 	resp, err := S.Storage.Student().CreateStudent(req)
 	if err != nil {
