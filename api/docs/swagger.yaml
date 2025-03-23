@@ -504,7 +504,7 @@ paths:
       summary: Fan yaratish
       tags:
       - Subjects
-  /subjects/delete/{id}:
+  /subjects/delete/{subject_id}:
     delete:
       description: Berilgan ID bo‘yicha fanni o‘chirish
       parameters:

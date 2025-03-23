@@ -42,9 +42,9 @@ func (h *Handler) CerateSubject(c *gin.Context) {
 // @Param id path string true "Fan ID'si"
 // @Success 200 {object} model.Status "Muvaffaqiyatli o‘chirildi"
 // @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
-// @Router /subjects/delete/{id} [delete]
+// @Router /subjects/delete/{subject_id} [delete]
 func (h *Handler) DeleteSubject(c *gin.Context){
-	err := h.Service.DeleteSubject(c, c.Param("id"))
+	err := h.Service.DeleteSubject(c, c.Param("subject_id"))
 	if err != nil{
 		h.Log.Error(fmt.Sprintf("Error is service function DeleteSubject: %v", err))
 		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})

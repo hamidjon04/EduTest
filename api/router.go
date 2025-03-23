@@ -39,7 +39,7 @@ func Router(service service.Service, log *slog.Logger) *gin.Engine {
 	{
 		questions.POST("/create", h.CreateQuestion)
 		questions.PUT("/update/:id", h.UpdateQuestion)
-		questions.DELETE("/delete/:id", h.DeleteQuestion)
+		questions.DELETE("/delete/:subject_id", h.DeleteQuestion)
 		questions.GET("", h.GetQuestions)
 	}
 

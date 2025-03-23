@@ -447,7 +447,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/subjects/delete/{id}": {
+        "/subjects/delete/{subject_id}": {
             "delete": {
                 "description": "Berilgan ID bo‘yicha fanni o‘chirish",
                 "tags": [
