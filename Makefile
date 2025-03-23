@@ -1,5 +1,5 @@
 CURRENT_DIR := $(shell pwd)
-DATABASE_URL="postgres://postgres:hamidjon4424@localhost:5432/edu_test?sslmode=disable"
+DATABASE_URL="postgres://postgres:hamidjon4424@postgres:5432/edu_test?sslmode=disable"
 
 run:
 	@go run cmd/main.go
