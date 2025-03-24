@@ -78,12 +78,12 @@ func (S *Service) CreateTemplate(ctx context.Context, req *model.CreateTemplateR
 }
 
 func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentTestReq) (*model.Result, error) {
-	student, err := S.Storage.Student().GetStudentByStringId(req.StudentId)
-	if err != nil {
-		S.Log.Error(fmt.Sprintf("Error is get student: %v", err))
-		return nil, err
-	}
-	templateId, err := S.Storage.Template().GetTemplate(student.Id, req.Day)
+	// student, err := S.Storage.Student().GetStudentByStringId(req.StudentId)
+	// if err != nil {
+	// 	S.Log.Error(fmt.Sprintf("Error is get student: %v", err))
+	// 	return nil, err
+	// }
+	templateId, err := S.Storage.Template().GetTemplate(req.StudentId, req.Day)
 	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get student's template: %v", err))
 		return nil, err
@@ -129,7 +129,7 @@ func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentT
 	}
 
 	err = S.Storage.Student().CreateStudentResult(&model.CreateStudentResultReq{
-		StudentId:  student.Id,
+		StudentId:  req.StudentId,
 		TemplateId: templateId,
 		Results:    results,
 		Point:      point,
