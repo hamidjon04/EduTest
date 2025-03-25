@@ -6,6 +6,7 @@ import (
 	"edutest/pkg/model"
 	"edutest/pkg/pdf"
 	"fmt"
+	"math"
 )
 
 func (S *Service) CreateTemplate(ctx context.Context, req *model.CreateTemplateReq) error {
@@ -78,11 +79,6 @@ func (S *Service) CreateTemplate(ctx context.Context, req *model.CreateTemplateR
 }
 
 func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentTestReq) (*model.Result, error) {
-	// student, err := S.Storage.Student().GetStudentByStringId(req.StudentId)
-	// if err != nil {
-	// 	S.Log.Error(fmt.Sprintf("Error is get student: %v", err))
-	// 	return nil, err
-	// }
 	templateId, err := S.Storage.Template().GetTemplate(req.StudentId, req.Day)
 	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get student's template: %v", err))
@@ -138,7 +134,7 @@ func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentT
 		S.Log.Error(fmt.Sprintf("Error is save student's result: %v", err))
 	}
 
-	result.Percent = float64(result.Correct) / float64(len(answers))
+	result.Percent = math.Ceil(float64(result.Correct) / float64(len(answers)) * 10000) / 100
 	return &result, nil
 }
 
