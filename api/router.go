@@ -26,6 +26,7 @@ func Router(service service.Service, log *slog.Logger) *gin.Engine {
 		students.DELETE("/delete/:id", h.DeleteStudent)
 		students.GET("", h.GetStudents)
 		students.GET("/:student_id/result", h.GetStudentResult)
+		students.GET("/results", h.GetStudentsResults)
 	}
 
 	subjects := router.Group("/subjects")

@@ -56,7 +56,10 @@ func (h *Handler) CheckStudentTest(c *gin.Context) {
 	resp, err := h.Service.CheckStudentTest(c, &req)
 	if err != nil {
 		h.Log.Error(fmt.Sprintf("Error is service function CheckStudentTest: %v", err))
-		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error: err.Error(),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, resp)

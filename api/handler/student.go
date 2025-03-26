@@ -123,7 +123,39 @@ func (h *Handler) GetStudentResult(c *gin.Context){
 	resp, err := h.Service.GetStudentResult(c, &req)
 	if err != nil{
 		h.Log.Error(fmt.Sprintf("Error is service function GetStudentResult: %v", err))
-		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error: err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary Talabalarning natijalarini olish
+// @Description Berilgan kun va fanlarga mos keluvchi talabalarning natijalarini qaytaradi
+// @Tags Students
+// @Accept json
+// @Produce json
+// @Param day query string false "Natija kuni"
+// @Param subject1_id query string false "Birinchi fan ID si"
+// @Param subject2_id query string false "Ikkinchi fan ID si"
+// @Success 200 {object} model.GetStudentsResultResp "Talabalarning natijalari"
+// @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
+// @Router /students/results [get]
+func (h *Handler) GetStudentsResults(c *gin.Context){
+	req := model.GetStudentsResultReq{
+		Day: c.Query("day"),
+		Subject1: c.Query("subject1_id"),
+		Subject2: c.Query("subject2_id"),
+	}
+	resp, err := h.Service.GetStudentsResult(c, &req)
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is service function GetStudentsResult: %v", err))
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error: err.Error(),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, resp)

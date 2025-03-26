@@ -304,6 +304,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/students/results": {
+            "get": {
+                "description": "Berilgan kun va fanlarga mos keluvchi talabalarning natijalarini qaytaradi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Talabalarning natijalarini olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Natija kuni",
+                        "name": "day",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Birinchi fan ID si",
+                        "name": "subject1_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Ikkinchi fan ID si",
+                        "name": "subject2_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Talabalarning natijalari",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetStudentsResultResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/students/update/{id}": {
             "put": {
                 "description": "Berilgan ID bo‘yicha talabani yangilash",
@@ -751,6 +800,9 @@ const docTemplate = `{
         "model.Error": {
             "type": "object",
             "properties": {
+                "error": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
                 }
@@ -785,6 +837,20 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/model.Student"
+                    }
+                }
+            }
+        },
+        "model.GetStudentsResultResp": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "students_results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.StudentReslt"
                     }
                 }
             }
@@ -907,6 +973,38 @@ const docTemplate = `{
                 },
                 "phone_number": {
                     "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "subject1": {
+                    "type": "string"
+                },
+                "subject2": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.StudentReslt": {
+            "type": "object",
+            "properties": {
+                "ball": {
+                    "type": "number"
+                },
+                "day": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.QuestionResult"
+                    }
                 },
                 "student_id": {
                     "type": "string"

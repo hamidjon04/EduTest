@@ -25,6 +25,7 @@ type CreateStudentResp struct {
 
 type Error struct {
 	Message string `json:"message"`
+	Error string `json:"error"`
 }
 
 type UpdateStudentReq struct {
@@ -179,8 +180,8 @@ type Result struct {
 }
 
 type QuestionResult struct {
-	Number int `json:"number"`
-	Status bool   `json:"status"`
+	Number int  `json:"number"`
+	Status bool `json:"status"`
 }
 
 type CreateStudentResultReq struct {
@@ -203,4 +204,26 @@ type StudentResult struct {
 
 type GetStudentResultResp struct {
 	Results []StudentResult `json:"results"`
+}
+
+type GetStudentsResultReq struct {
+	Day      string `json:"day"`
+	Subject1 string `json:"subject1"`
+	Subject2 string `json:"subject2"`
+}
+
+type StudentReslt struct {
+	StudentId string           `json:"student_id"`
+	Name      string           `json:"name"`
+	Lastname  string           `json:"lastname"`
+	Subject1  string           `json:"subject1"`
+	Subject2  string           `json:"subject2"`
+	Day       string           `json:"day"`
+	Result    []QuestionResult `json:"result"`
+	Ball      float64          `json:"ball"`
+}
+
+type GetStudentsResultResp struct {
+	StudentsResults []StudentReslt `json:"students_results"`
+	Count           int            `json:"count"`
 }

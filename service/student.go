@@ -41,8 +41,17 @@ func (S *Service) DeleteStudent(ctx context.Context, req *model.StudentId) error
 func (S *Service) GetStudents(ctx context.Context, req *model.StudentId) (*model.GetStudentsResp, error) {
 	resp, err := S.Storage.Student().GetStudents(req)
 	if err != nil {
-		S.Log.Error(fmt.Sprintf("Error is get student's data from datavase: %v", err))
+		S.Log.Error(fmt.Sprintf("Error is get student's data from database: %v", err))
 		return nil, err
 	}
+	return resp, nil
+}
+
+func (S *Service) GetStudentsResult(ctx context.Context, req *model.GetStudentsResultReq) (*model.GetStudentsResultResp, error){
+	resp, err := S.Storage.Student().GetStudentsResult(req)
+	if err != nil{
+		S.Log.Error(fmt.Sprintf("Error is get student's results from database: %v", err))
+		return nil, err
+	}	
 	return resp, nil
 }

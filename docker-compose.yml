@@ -1,7 +1,7 @@
 services:
 
   postgres-db:
-    container_name: postgres
+    container_name: postgres_edutest
     image: postgres:latest
     environment:
       - POSTGRES_USER=${DB_USER}

@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
-	"time"
 	"math/rand"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -21,6 +21,7 @@ type StudentRepo interface {
 	CreateStudentResult(req *model.CreateStudentResultReq) error
 	GetStudentResult(req *model.GetStudentResultReq) (*model.GetStudentResultResp, error)
 	StudentCount() int
+	GetStudentsResult(req *model.GetStudentsResultReq) (*model.GetStudentsResultResp, error)
 }
 
 type studentImpl struct {
@@ -274,4 +275,59 @@ func (S *studentImpl) StudentCount() int {
 		return randomNumber
 	}
 	return count
+}
+
+func (S *studentImpl) GetStudentsResult(req *model.GetStudentsResultReq) (*model.GetStudentsResultResp, error) {
+	var results []model.StudentReslt
+	query := `
+				SELECT 
+					S.student_id, S.name, S.lastname, Sb1.name as subject1, Sb2.name as subject2, T.day, Sr.result, Sr.ball
+				FROM 
+					students AS S
+				JOIN student_subjects AS SS ON S.id = SS.student_id
+				JOIN subjects AS Sb1 ON SS.subject1 = Sb1.id
+				JOIN subjects AS Sb2 ON SS.subject2 = Sb2.id
+				JOIN templates AS T ON S.id = T.student_id
+				LEFT JOIN students_result AS Sr ON S.id = Sr.student_id AND T.id = Sr.template_id
+				WHERE 
+					S.deleted_at IS NULL`
+	if len(req.Day) > 0{
+		query += fmt.Sprintf(" AND T.day = '%v'", req.Day)
+	}
+	if len(req.Subject1) > 0{
+		query += fmt.Sprintf(" AND SS.subject1 = '%v'", req.Subject1)
+	}
+	if len(req.Subject2) > 0{
+		query += fmt.Sprintf(" AND SS.subject2 = '%v'", req.Subject2)
+	}
+
+	rows, err := S.DB.Query(query)
+	if err != nil{
+		S.Log.Error(fmt.Sprintf("Error is get students' results: %v", err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	var count int
+	for rows.Next(){
+		var r model.StudentReslt
+		var subjects []byte
+		err = rows.Scan(&r.StudentId, &r.Name, &r.Lastname, &r.Subject1, &r.Subject2, &r.Day, &subjects, &r.Ball)
+		if err != nil {
+			S.Log.Error(fmt.Sprintf("Error is scan results: %v", err))
+			return nil, err
+		}
+		err = json.Unmarshal(subjects, &r.Result)
+		if err != nil {
+			S.Log.Error(fmt.Sprintf("Error is unmarshaling result: %v", err))
+			return nil, err
+		}
+		results = append(results, r)
+		count++
+	}
+
+	return &model.GetStudentsResultResp{
+		StudentsResults: results,
+		Count: count,
+	}, nil
 }

@@ -61,6 +61,8 @@ definitions:
     type: object
   model.Error:
     properties:
+      error:
+        type: string
       message:
         type: string
     type: object
@@ -83,6 +85,15 @@ definitions:
       students:
         items:
           $ref: '#/definitions/model.Student'
+        type: array
+    type: object
+  model.GetStudentsResultResp:
+    properties:
+      count:
+        type: integer
+      students_results:
+        items:
+          $ref: '#/definitions/model.StudentReslt'
         type: array
     type: object
   model.GetSubjectsResp:
@@ -162,6 +173,27 @@ definitions:
         type: string
       phone_number:
         type: string
+      student_id:
+        type: string
+      subject1:
+        type: string
+      subject2:
+        type: string
+    type: object
+  model.StudentReslt:
+    properties:
+      ball:
+        type: number
+      day:
+        type: string
+      lastname:
+        type: string
+      name:
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/model.QuestionResult'
+        type: array
       student_id:
         type: string
       subject1:
@@ -437,6 +469,39 @@ paths:
           schema:
             $ref: '#/definitions/model.Error'
       summary: Talabani o'chirish
+      tags:
+      - Students
+  /students/results:
+    get:
+      consumes:
+      - application/json
+      description: Berilgan kun va fanlarga mos keluvchi talabalarning natijalarini
+        qaytaradi
+      parameters:
+      - description: Natija kuni
+        in: query
+        name: day
+        type: string
+      - description: Birinchi fan ID si
+        in: query
+        name: subject1_id
+        type: string
+      - description: Ikkinchi fan ID si
+        in: query
+        name: subject2_id
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Talabalarning natijalari
+          schema:
+            $ref: '#/definitions/model.GetStudentsResultResp'
+        "500":
+          description: Serverda xatolik yuz berdi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talabalarning natijalarini olish
       tags:
       - Students
   /students/update/{id}:

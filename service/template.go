@@ -84,6 +84,15 @@ func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentT
 		S.Log.Error(fmt.Sprintf("Error is get student's template: %v", err))
 		return nil, err
 	}
+
+	// reslt, err := S.Storage.Student().GetStudentResult(&model.GetStudentResultReq{
+	// 	StudentId: req.StudentId,
+	// 	TemplateId: templateId,
+	// })
+	// if len(reslt.Results) != 0 || err != sql.ErrNoRows{
+	// 	return nil, fmt.Errorf("%s", "Studentning natijasi avval tekshirilgan. Qayta tekshirish uchun natijani o'chiring.")
+	// }
+
 	answers, err := S.Storage.Template().GetTemplateAnswer(templateId)
 	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is get answers: %v", err))
@@ -134,7 +143,7 @@ func (S *Service) CheckStudentTest(ctx context.Context, req *model.CheckStudentT
 		S.Log.Error(fmt.Sprintf("Error is save student's result: %v", err))
 	}
 
-	result.Percent = math.Ceil(float64(result.Correct) / float64(len(answers)) * 10000) / 100
+	result.Percent = math.Ceil(float64(result.Correct)/float64(len(answers))*10000) / 100
 	return &result, nil
 }
 
