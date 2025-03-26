@@ -288,7 +288,7 @@ func (S *studentImpl) GetStudentsResult(req *model.GetStudentsResultReq) (*model
 				JOIN subjects AS Sb1 ON SS.subject1 = Sb1.id
 				JOIN subjects AS Sb2 ON SS.subject2 = Sb2.id
 				JOIN templates AS T ON S.id = T.student_id
-				LEFT JOIN students_result AS Sr ON S.id = Sr.student_id AND T.id = Sr.template_id
+				JOIN students_result AS Sr ON S.id = T.student_id AND T.id = Sr.template_id
 				WHERE 
 					S.deleted_at IS NULL`
 	if len(req.Day) > 0{
