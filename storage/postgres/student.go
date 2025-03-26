@@ -312,10 +312,16 @@ func (S *studentImpl) GetStudentsResult(req *model.GetStudentsResultReq) (*model
 	for rows.Next(){
 		var r model.StudentReslt
 		var subjects []byte
-		err = rows.Scan(&r.StudentId, &r.Name, &r.Lastname, &r.Subject1, &r.Subject2, &r.Day, &subjects, &r.Ball)
+		var ball sql.NullFloat64
+		err = rows.Scan(&r.StudentId, &r.Name, &r.Lastname, &r.Subject1, &r.Subject2, &r.Day, &subjects, &ball)
 		if err != nil {
 			S.Log.Error(fmt.Sprintf("Error is scan results: %v", err))
 			return nil, err
+		}
+		if ball.Valid{
+			r.Ball = ball.Float64
+		}else{
+			r.Ball = 0.0
 		}
 		err = json.Unmarshal(subjects, &r.Result)
 		if err != nil {
