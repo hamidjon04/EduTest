@@ -10,11 +10,11 @@ import (
 )
 
 type SubjectRepo interface {
-	CreateSubject(req *model.CreateSubjectReq) error 
-	DeleteSubject(id string) error
+	CreateSubject(req *model.CreateSubjectReq) error
+	UpdateSubject(req *model.UpdateSubjectReq) error
 	GetSubjects(id string) (*model.GetSubjectsResp, error)
 	CreateStudentSubject(req *model.CreateStudentReq) error
-	UpdateStudentSubject(req *model.UpdateStudentReq) error 
+	UpdateStudentSubject(req *model.UpdateStudentReq) error
 	DeleteStudentSubject(req *model.StudentId) error
 }
 
@@ -45,13 +45,15 @@ func (S *subjectImpl) CreateSubject(req *model.CreateSubjectReq) error {
 	return nil
 }
 
-func (S *subjectImpl) DeleteSubject(id string) error {
+func (S *subjectImpl) UpdateSubject(req *model.UpdateSubjectReq) error {
 	query := `
-				DELETE FROM 
+				UPDATE SET 
+					name = $1
+				FROM 
 					subjects
 				WHERE 
-					id = $1`
-	_, err := S.DB.Exec(query, id)
+					id = $2`
+	_, err := S.DB.Exec(query, req.Id, req.Name)
 	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is delete subject: %v", err))
 		return err

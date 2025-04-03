@@ -15,8 +15,8 @@ func (S *Service) CreateSubject(ctx context.Context, req *model.CreateSubjectReq
 	return nil
 }
 
-func (S *Service) DeleteSubject(ctx context.Context, id string) error {
-	err := S.Storage.Subject().DeleteSubject(id)
+func (S *Service) UpdateSubject(ctx context.Context, req *model.UpdateSubjectReq) error {
+	err := S.Storage.Subject().UpdateSubject(req)
 	if err != nil {
 		S.Log.Error(fmt.Sprintf("Error is delete subject: %v", err))
 		return err

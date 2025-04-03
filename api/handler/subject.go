@@ -28,7 +28,7 @@ func (h *Handler) CerateSubject(c *gin.Context) {
 		return
 	}
 	err = h.Service.CreateSubject(c, &req)
-	if err != nil{
+	if err != nil {
 		h.Log.Error(fmt.Sprintf("Error is service function CreateSubject: %v", err))
 		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})
 		return
@@ -36,18 +36,27 @@ func (h *Handler) CerateSubject(c *gin.Context) {
 	c.JSON(http.StatusOK, model.Status{Message: "Success!"})
 }
 
-// @Summary Fan o'chirish
-// @Description Berilgan ID bo‘yicha fanni o‘chirish
+// @Summary Fan nomini yangilash
+// @Description Berilgan ID bo‘yicha fanni yangilaydi
 // @Tags Subjects
-// @Param id path string true "Fan ID'si"
-// @Success 200 {object} model.Status "Muvaffaqiyatli o‘chirildi"
-// @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
-// @Router /subjects/delete/{subject_id} [delete]
-func (h *Handler) DeleteSubject(c *gin.Context){
-	err := h.Service.DeleteSubject(c, c.Param("subject_id"))
-	if err != nil{
+// @Accept json
+// @Produce json
+// @Param id path string true "Fan IDsi"
+// @Param name query string true "Yangi fan nomi"
+// @Success 200 {object} model.Status
+// @Failure 500 {object} model.Error
+// @Router /subjects/update/{id} [put]
+func (h *Handler) UpdateSubject(c *gin.Context) {
+	err := h.Service.UpdateSubject(c, &model.UpdateSubjectReq{
+		Id:   c.Param("id"),
+		Name: c.Query("name"),
+	})
+	if err != nil {
 		h.Log.Error(fmt.Sprintf("Error is service function DeleteSubject: %v", err))
-		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error:   err.Error(),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, model.Status{Message: "Success!"})
@@ -60,9 +69,9 @@ func (h *Handler) DeleteSubject(c *gin.Context){
 // @Success 200 {object} model.GetSubjectsResp "Fanlar ma'lumotlari"
 // @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
 // @Router /subjects/get [get]
-func (h *Handler) GetSubjects(c *gin.Context){
+func (h *Handler) GetSubjects(c *gin.Context) {
 	resp, err := h.Service.GetSubjects(c, c.Query("id"))
-	if err != nil{
+	if err != nil {
 		h.Log.Error(fmt.Sprintf("Error is service function GetSubjects: %v", err))
 		c.JSON(http.StatusInternalServerError, model.Error{Message: "Serverda xatolik"})
 		return

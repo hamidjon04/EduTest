@@ -25,7 +25,7 @@ type CreateStudentResp struct {
 
 type Error struct {
 	Message string `json:"message"`
-	Error string `json:"error"`
+	Error   string `json:"error"`
 }
 
 type UpdateStudentReq struct {
@@ -226,4 +226,9 @@ type StudentReslt struct {
 type GetStudentsResultResp struct {
 	StudentsResults []StudentReslt `json:"students_results"`
 	Count           int            `json:"count"`
+}
+
+type UpdateSubjectReq struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
