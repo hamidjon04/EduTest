@@ -103,6 +103,13 @@ definitions:
           $ref: '#/definitions/model.Subject'
         type: array
     type: object
+  model.Incorrect:
+    properties:
+      name:
+        type: string
+      nomer:
+        type: integer
+    type: object
   model.Option:
     properties:
       a:
@@ -148,6 +155,17 @@ definitions:
         type: integer
       status:
         type: boolean
+    type: object
+  model.QuestionsStatus:
+    properties:
+      correct:
+        type: integer
+      incorrect:
+        type: integer
+      incorrect_questions:
+        items:
+          $ref: '#/definitions/model.Incorrect'
+        type: array
     type: object
   model.Result:
     properties:
@@ -211,6 +229,17 @@ definitions:
         type: array
       template_id:
         type: string
+    type: object
+  model.StudentsStatus:
+    properties:
+      correct:
+        type: integer
+      incorrect:
+        type: integer
+      incorrect_students:
+        items:
+          $ref: '#/definitions/model.Student'
+        type: array
     type: object
   model.Subject:
     properties:
@@ -335,6 +364,35 @@ paths:
       summary: Savolni o‘chirish
       tags:
       - Questions
+  /questions/image/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Rasmni serverga yuklab, Minio'ga saqlaydi va URL qaytaradi
+      parameters:
+      - description: Yuklanadigan rasm fayli
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Yuklangan rasm URL'si
+          schema:
+            type: string
+        "400":
+          description: Faylni yuklab olishda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Faylni yuklash
+      tags:
+      - Files
   /questions/update/{id}:
     put:
       consumes:
@@ -370,6 +428,35 @@ paths:
       summary: Savolni yangilash
       tags:
       - Questions
+  /questions/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Foydalanuvchi Excel faylini yuklab, uni serverda qayta ishlash
+      parameters:
+      - description: Excel fayl
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/model.QuestionsStatus'
+        "400":
+          description: Faylni yuklashda yoki saqlashda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Serverda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Faylni yuklash va tahlil qilish
+      tags:
+      - Files
   /students:
     get:
       description: Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish
@@ -539,6 +626,35 @@ paths:
       summary: Talaba ma'lumotlarini yangilash
       tags:
       - Students
+  /students/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Excel fayl orqali talabalar ma'lumotlarini yuklash
+      parameters:
+      - description: Excel fayl (XLSX format)
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Talabalar muvaffaqiyatli yuklandi
+          schema:
+            $ref: '#/definitions/model.StudentsStatus'
+        "400":
+          description: Fayl yuklashda xatolik
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Server xatosi
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Talabalar ro'yxatini yuklash
+      tags:
+      - Files
   /subjects/create:
     post:
       consumes:
@@ -569,27 +685,6 @@ paths:
       summary: Fan yaratish
       tags:
       - Subjects
-  /subjects/delete/{subject_id}:
-    delete:
-      description: Berilgan ID bo‘yicha fanni o‘chirish
-      parameters:
-      - description: Fan ID'si
-        in: path
-        name: id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: Muvaffaqiyatli o‘chirildi
-          schema:
-            $ref: '#/definitions/model.Status'
-        "500":
-          description: Serverda xatolik yuz berdi
-          schema:
-            $ref: '#/definitions/model.Error'
-      summary: Fan o'chirish
-      tags:
-      - Subjects
   /subjects/get:
     get:
       description: Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi
@@ -608,6 +703,36 @@ paths:
           schema:
             $ref: '#/definitions/model.Error'
       summary: Fan(lar) ma'lumotlarini olish
+      tags:
+      - Subjects
+  /subjects/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Berilgan ID bo‘yicha fanni yangilaydi
+      parameters:
+      - description: Fan IDsi
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Yangi fan nomi
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Status'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Fan nomini yangilash
       tags:
       - Subjects
   /templates/check:

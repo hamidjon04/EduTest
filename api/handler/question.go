@@ -107,3 +107,77 @@ func (h *Handler) GetQuestions(c *gin.Context){
 	}
 	c.JSON(http.StatusOK, resp)
 }
+
+// @Summary Faylni yuklash va tahlil qilish
+// @Description Foydalanuvchi Excel faylini yuklab, uni serverda qayta ishlash
+// @Tags Files
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Excel fayl"
+// @Success 200 {object} model.QuestionsStatus "Success"
+// @Failure 400 {object} model.Error "Faylni yuklashda yoki saqlashda xatolik"
+// @Failure 500 {object} model.Error "Serverda xatolik"
+// @Router /questions/upload [post]
+func (h *Handler) UploadQuestionsExelFile(c *gin.Context){
+	file, err := c.FormFile("file")
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is upload file: %v", err))
+		c.JSON(http.StatusBadRequest, model.Error{
+			Message: "Faylni yuklab olishda xatolik",
+			Error: err.Error(),
+		})
+	}
+
+	filePath := "./" + file.Filename
+	if err = c.SaveUploadedFile(file, filePath); err != nil{
+		h.Log.Error(fmt.Sprintf("Error is save file: %v", err))
+		c.JSON(http.StatusBadRequest, model.Error{
+			Message: "Faylni saqlashda xatolik",
+			Error: err.Error(),
+		})
+	}
+
+	resp, err := h.Service.OpenQuestionsExelFile(c, filePath)
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is service function OpenQuestionsExelFile: %v", err))
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error: err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary Faylni yuklash
+// @Description Rasmni serverga yuklab, Minio'ga saqlaydi va URL qaytaradi
+// @Tags Files
+// @Accept multipart/form-data
+// @Produce json
+// @Param image formData file true "Yuklanadigan rasm fayli"
+// @Success 200 {string} string "Yuklangan rasm URL'si"
+// @Failure 400 {object} model.Error "Faylni yuklab olishda xatolik"
+// @Failure 500 {object} model.Error "Serverda xatolik"
+// @Router /questions/image/upload [post]
+func (h *Handler) UploadFile(c *gin.Context){
+	file, _, err := c.Request.FormFile("image")
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is upload file: %v", err))
+		c.JSON(http.StatusBadRequest, model.Error{
+			Message: "Faylni yuklab olishda xatolik",
+			Error: err.Error(),
+		})
+	}
+
+	imageUrl, err := h.Service.Storage.Minio().UploadFile(file, "uploaded_image")
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is service function UploadFile: %v", err))
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error: err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, imageUrl)
+}

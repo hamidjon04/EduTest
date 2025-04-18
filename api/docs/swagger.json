@@ -131,6 +131,50 @@
                 }
             }
         },
+        "/questions/image/upload": {
+            "post": {
+                "description": "Rasmni serverga yuklab, Minio'ga saqlaydi va URL qaytaradi",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Faylni yuklash",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Yuklanadigan rasm fayli",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Yuklangan rasm URL'si",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Faylni yuklab olishda xatolik",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/questions/update/{id}": {
             "put": {
                 "description": "Berilgan ID bo‘yicha savolni yangilash",
@@ -177,6 +221,50 @@
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/questions/upload": {
+            "post": {
+                "description": "Foydalanuvchi Excel faylini yuklab, uni serverda qayta ishlash",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Faylni yuklash va tahlil qilish",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Excel fayl",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/model.QuestionsStatus"
+                        }
+                    },
+                    "400": {
+                        "description": "Faylni yuklashda yoki saqlashda xatolik",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Serverda xatolik",
                         "schema": {
                             "$ref": "#/definitions/model.Error"
                         }
@@ -395,6 +483,50 @@
                 }
             }
         },
+        "/students/upload": {
+            "post": {
+                "description": "Excel fayl orqali talabalar ma'lumotlarini yuklash",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Talabalar ro'yxatini yuklash",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Excel fayl (XLSX format)",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Talabalar muvaffaqiyatli yuklandi",
+                        "schema": {
+                            "$ref": "#/definitions/model.StudentsStatus"
+                        }
+                    },
+                    "400": {
+                        "description": "Fayl yuklashda xatolik",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Server xatosi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/students/{student_id}/result": {
             "get": {
                 "description": "Retrieves the result of a student based on student_id and template_id",
@@ -485,38 +617,6 @@
                 }
             }
         },
-        "/subjects/delete/{subject_id}": {
-            "delete": {
-                "description": "Berilgan ID bo‘yicha fanni o‘chirish",
-                "tags": [
-                    "Subjects"
-                ],
-                "summary": "Fan o'chirish",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Fan ID'si",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Muvaffaqiyatli o‘chirildi",
-                        "schema": {
-                            "$ref": "#/definitions/model.Status"
-                        }
-                    },
-                    "500": {
-                        "description": "Serverda xatolik yuz berdi",
-                        "schema": {
-                            "$ref": "#/definitions/model.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/subjects/get": {
             "get": {
                 "description": "Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi",
@@ -541,6 +641,51 @@
                     },
                     "500": {
                         "description": "Serverda xatolik yuz berdi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/update/{id}": {
+            "put": {
+                "description": "Berilgan ID bo‘yicha fanni yangilaydi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Fan nomini yangilash",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fan IDsi",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Yangi fan nomi",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Status"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/model.Error"
                         }
@@ -855,6 +1000,17 @@
                 }
             }
         },
+        "model.Incorrect": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "nomer": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Option": {
             "type": "object",
             "properties": {
@@ -923,6 +1079,23 @@
                 },
                 "status": {
                     "type": "boolean"
+                }
+            }
+        },
+        "model.QuestionsStatus": {
+            "type": "object",
+            "properties": {
+                "correct": {
+                    "type": "integer"
+                },
+                "incorrect": {
+                    "type": "integer"
+                },
+                "incorrect_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Incorrect"
+                    }
                 }
             }
         },
@@ -1020,6 +1193,23 @@
                 },
                 "template_id": {
                     "type": "string"
+                }
+            }
+        },
+        "model.StudentsStatus": {
+            "type": "object",
+            "properties": {
+                "correct": {
+                    "type": "integer"
+                },
+                "incorrect": {
+                    "type": "integer"
+                },
+                "incorrect_students": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Student"
+                    }
                 }
             }
         },

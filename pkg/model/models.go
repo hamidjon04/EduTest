@@ -232,3 +232,20 @@ type UpdateSubjectReq struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
+
+type StudentsStatus struct {
+	Correct           int       `json:"correct"`
+	Incorrect         int       `json:"incorrect"`
+	IncorrectStudents []Student `json:"incorrect_students"`
+}
+
+type Incorrect struct{
+	Nomer int `json:"nomer"`
+	Name string `json:"name"`
+}
+
+type QuestionsStatus struct {
+	Correct            int        `json:"correct"`
+	Incorrect          int        `json:"incorrect"`
+	IncorrectQuestions []Incorrect `json:"incorrect_questions"`
+}

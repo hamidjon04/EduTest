@@ -160,3 +160,45 @@ func (h *Handler) GetStudentsResults(c *gin.Context){
 	}
 	c.JSON(http.StatusOK, resp)
 }
+
+// @Summary Talabalar ro'yxatini yuklash
+// @Description Excel fayl orqali talabalar ma'lumotlarini yuklash
+// @Tags Files
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Excel fayl (XLSX format)"
+// @Success 200 {object} model.StudentsStatus "Talabalar muvaffaqiyatli yuklandi"
+// @Failure 400 {object} model.Error "Fayl yuklashda xatolik"
+// @Failure 500 {object} model.Error "Server xatosi"
+// @Router /students/upload [post]
+func (h *Handler) UploadStudentsExelFile(c *gin.Context){
+	file, err := c.FormFile("file")
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is upload file: %v", err))
+		c.JSON(http.StatusBadRequest, model.Error{
+			Message: "Faylni yuklab olishda xatolik",
+			Error: err.Error(),
+		})
+	}
+
+	filePath := "./" + file.Filename
+	if err = c.SaveUploadedFile(file, filePath); err != nil{
+		h.Log.Error(fmt.Sprintf("Error is save file: %v", err))
+		c.JSON(http.StatusBadRequest, model.Error{
+			Message: "Faylni saqlashda xatolik",
+			Error: err.Error(),
+		})
+	}
+
+	resp, err := h.Service.OpenStudentsExelFile(c, filePath)
+	if err != nil{
+		h.Log.Error(fmt.Sprintf("Error is service function OpenStudentsExelFile: %v", err))
+		c.JSON(http.StatusInternalServerError, model.Error{
+			Message: "Serverda xatolik",
+			Error: err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}

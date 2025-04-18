@@ -8,19 +8,18 @@ RUN go mod download
 
 COPY . .
 
-# Dastur qismida logs papkasini yaratamiz
-RUN mkdir -p logs
+# logs papkasini yaratamiz
+RUN mkdir -p logs && touch logs/app.log && chmod 666 logs/app.log
 
-# Bu qismda manzilni aniq ko'rsatib, myapp faylini o'rnatamiz
+# Dastur faylini kompilyatsiya qilamiz
 RUN CGO_ENABLED=0 GOOS=linux go build -o myapp ./cmd/main.go 
 
 FROM alpine:latest
 
 WORKDIR /app
 
-# Builder qatlamidan myapp ni nusxalaymiz
+# Builder qatlamidan myapp va .env fayllarini nusxalaymiz
 COPY --from=builder /app/myapp .
-
 COPY --from=builder /app/.env .
 
 # logs papkasini nusxalaymiz
