@@ -161,23 +161,23 @@ func (h *Handler) UploadQuestionsExelFile(c *gin.Context){
 // @Failure 500 {object} model.Error "Serverda xatolik"
 // @Router /questions/image/upload [post]
 func (h *Handler) UploadFile(c *gin.Context){
-	file, _, err := c.Request.FormFile("image")
-	if err != nil{
-		h.Log.Error(fmt.Sprintf("Error is upload file: %v", err))
-		c.JSON(http.StatusBadRequest, model.Error{
-			Message: "Faylni yuklab olishda xatolik",
-			Error: err.Error(),
-		})
-	}
+	// file, _, err := c.Request.FormFile("image")
+	// if err != nil{
+	// 	h.Log.Error(fmt.Sprintf("Error is upload file: %v", err))
+	// 	c.JSON(http.StatusBadRequest, model.Error{
+	// 		Message: "Faylni yuklab olishda xatolik",
+	// 		Error: err.Error(),
+	// 	})
+	// }
 
-	imageUrl, err := h.Service.Storage.Minio().UploadFile(file, "uploaded_image")
-	if err != nil{
-		h.Log.Error(fmt.Sprintf("Error is service function UploadFile: %v", err))
-		c.JSON(http.StatusInternalServerError, model.Error{
-			Message: "Serverda xatolik",
-			Error: err.Error(),
-		})
-	}
+	// imageUrl := ""
+	// if err != nil{
+	// 	h.Log.Error(fmt.Sprintf("Error is service function UploadFile: %v", err))
+	// 	c.JSON(http.StatusInternalServerError, model.Error{
+	// 		Message: "Serverda xatolik",
+	// 		Error: err.Error(),
+	// 	})
+	// }
 
-	c.JSON(http.StatusOK, imageUrl)
+	// c.JSON(http.StatusOK, imageUrl)
 }
