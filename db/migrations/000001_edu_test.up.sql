@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS students_result(
     FOREIGN KEY(template_id) REFERENCES templates(id) ON DELETE CASCADE
 );
 
-CREATE TABLE templte_answers(
+CREATE TABLE IF NOT EXISTS templte_answers(
     template_id UUID NOT NULL,
     answer JSONB NOT NULL,
     FOREIGN KEY(template_id) REFERENCES templates(id) ON DELETE CASCADE

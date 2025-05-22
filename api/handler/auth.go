@@ -10,7 +10,7 @@ import (
 
 // @Summary      User registration
 // @Description  Register a new user with necessary credentials
-// @Tags         auth
+// @Tags         Auth
 // @Accept       json
 // @Produce      json
 // @Param        request body model.RegisterReq true "User registration data"
@@ -41,7 +41,7 @@ func(h *Handler) Register(c *gin.Context){
 
 // @Summary      User login
 // @Description  Authenticate user and return access/refresh tokens
-// @Tags         auth
+// @Tags         Auth
 // @Accept       json
 // @Produce      json
 // @Param        request body model.LoginReq true "User credentials"
@@ -72,7 +72,7 @@ func(h *Handler) Login(c *gin.Context){
 
 // @Summary      Refresh access token
 // @Description  Get a new access token using refresh token
-// @Tags         auth
+// @Tags         Auth
 // @Accept       json
 // @Produce      json
 // @Param        user_id        query string true "User ID"
