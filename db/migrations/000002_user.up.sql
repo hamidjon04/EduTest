@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users(
     name VARCHAR NOT NULL,
     lastname VARCHAR NOT NULL, 
     password VARCHAR NOT NULL,
-    phone_number VARCHAR DEFAULT "",
+    phone_number VARCHAR DEFAULT '',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP
