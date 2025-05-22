@@ -12,6 +12,7 @@ type Storage interface {
 	Subject() postgres.SubjectRepo
 	Question() postgres.QuestionRepo
 	Template() postgres.TemplateRepo
+	Auth() postgres.AuthRepo
 }
 
 type storageImpl struct {
@@ -44,3 +45,6 @@ func (s *storageImpl) Template() postgres.TemplateRepo {
 	return postgres.NewTemplateRepo(s.DB, s.Log)
 }
 
+func (s *storageImpl) Auth() postgres.AuthRepo {
+	return postgres.NewAuthRepo(s.DB, s.Log)
+}

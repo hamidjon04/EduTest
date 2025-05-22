@@ -19,6 +19,7 @@ type Config struct {
 	MINIO_ROOT_PASSWORD string
 	MINIO_HOST          string
 	MINIO_PUBLIC_HOST   string
+	JWT_KEY             string
 }
 
 func LoadConfig() Config {
@@ -38,6 +39,7 @@ func LoadConfig() Config {
 	config.MINIO_ROOT_PASSWORD = cast.ToString(coalesce("MINIO_ROOT_PASSWORD", ""))
 	config.MINIO_HOST = cast.ToString(coalesce("MINIO_HOST", "minio:9000"))
 	config.MINIO_PUBLIC_HOST = cast.ToString(coalesce("MINIO_PUBLIC_HOST", ""))
+	config.JWT_KEY = cast.ToString(coalesce("JWT_KEY", "secret"))
 	return config
 }
 

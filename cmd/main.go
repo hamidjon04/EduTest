@@ -8,6 +8,7 @@ import (
 	"edutest/storage"
 	"edutest/storage/postgres"
 	"fmt"
+
 )
 
 func main() {
@@ -21,8 +22,8 @@ func main() {
 
 
 	storage := storage.NewStorage(db, logger, cfg)
-	service := service.NewService(storage, logger)
-	router := api.Router(service, logger)
+	service := service.NewService(storage, logger, cfg)
+	router := api.Router(service, logger, cfg)
 
 	err = router.Run(cfg.EDU_TEST)
 	if err != nil {

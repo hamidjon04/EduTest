@@ -110,6 +110,13 @@ definitions:
       nomer:
         type: integer
     type: object
+  model.LoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   model.Option:
     properties:
       a:
@@ -166,6 +173,17 @@ definitions:
         items:
           $ref: '#/definitions/model.Incorrect'
         type: array
+    type: object
+  model.RegisterReq:
+    properties:
+      lastname:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
     type: object
   model.Result:
     properties:
@@ -248,6 +266,20 @@ definitions:
       name:
         type: string
     type: object
+  model.Token:
+    properties:
+      access_token:
+        type: string
+    type: object
+  model.Tokens:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user_id:
+        type: string
+    type: object
   model.UpdateQuestionReq:
     properties:
       answer:
@@ -281,6 +313,36 @@ definitions:
 info:
   contact: {}
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return access/refresh tokens
+      parameters:
+      - description: User credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tokens'
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/model.Error'
+        "404":
+          description: User not found or invalid credentials
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: User login
+      tags:
+      - auth
   /questions:
     get:
       description: Berilgan ID yoki fan ID bo‘yicha savollarni olish
@@ -308,6 +370,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Savollarni olish
       tags:
       - Questions
@@ -338,6 +402,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Yangi savol yaratish
       tags:
       - Questions
@@ -361,6 +427,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Savolni o‘chirish
       tags:
       - Questions
@@ -390,6 +458,8 @@ paths:
           description: Serverda xatolik
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Faylni yuklash
       tags:
       - Files
@@ -425,6 +495,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Savolni yangilash
       tags:
       - Questions
@@ -454,9 +526,71 @@ paths:
           description: Serverda xatolik
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Faylni yuklash va tahlil qilish
       tags:
       - Files
+  /refresh-token:
+    get:
+      consumes:
+      - application/json
+      description: Get a new access token using refresh token
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: Refresh Token
+        in: query
+        name: refresh_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Token'
+        "401":
+          description: Invalid or expired refresh token
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: Refresh access token
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with necessary credentials
+      parameters:
+      - description: User registration data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tokens'
+        "400":
+          description: 'Bad request: invalid input'
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Error'
+      summary: User registration
+      tags:
+      - auth
   /students:
     get:
       description: Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish
@@ -475,6 +609,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talabalar ma'lumotlarini olish
       tags:
       - Students
@@ -504,6 +640,8 @@ paths:
           description: Serverda xatolik
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Get student result
       tags:
       - Students
@@ -534,6 +672,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talaba yaratish
       tags:
       - Students
@@ -555,6 +695,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talabani o'chirish
       tags:
       - Students
@@ -588,6 +730,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talabalarning natijalarini olish
       tags:
       - Students
@@ -623,6 +767,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talaba ma'lumotlarini yangilash
       tags:
       - Students
@@ -652,6 +798,8 @@ paths:
           description: Server xatosi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talabalar ro'yxatini yuklash
       tags:
       - Files
@@ -682,6 +830,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Fan yaratish
       tags:
       - Subjects
@@ -702,6 +852,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Fan(lar) ma'lumotlarini olish
       tags:
       - Subjects
@@ -732,6 +884,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Fan nomini yangilash
       tags:
       - Subjects
@@ -763,6 +917,8 @@ paths:
           description: Serverda xatolik yuz berdi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Talabaning test natijalarini tekshirish
       tags:
       - Templates
@@ -793,6 +949,8 @@ paths:
           description: Serverda xatolik
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Template yaratish
       tags:
       - Templates
@@ -827,7 +985,15 @@ paths:
           description: Server xatosi
           schema:
             $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
       summary: Student shablonini yuklab olish
       tags:
       - Templates
+securityDefinitions:
+  BearerAuth:
+    description: 'Tokenni faqat o‘zi yozing, masalan: eyJhbGciOiJIUzI1NiIs..'
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

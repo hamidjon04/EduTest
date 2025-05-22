@@ -11,6 +11,7 @@ import (
 // @Summary      Yangi savol yaratish
 // @Description  Yangi savol qo'shish uchun API
 // @Tags         Questions
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        request body model.CreateQuestionReq true "Savol yaratish ma'lumotlari"
@@ -38,6 +39,7 @@ func (h *Handler) CreateQuestion(c *gin.Context) {
 // @Summary      Savolni yangilash
 // @Description  Berilgan ID bo‘yicha savolni yangilash
 // @Tags         Questions
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        id path string true "Savol IDsi"
@@ -68,6 +70,7 @@ func(h *Handler) UpdateQuestion(c *gin.Context){
 // @Summary      Savolni o‘chirish
 // @Description  Berilgan ID bo‘yicha savolni o‘chirish
 // @Tags         Questions
+// @Security     BearerAuth
 // @Produce      json
 // @Param        id path string true "Savol IDsi"
 // @Success      200 {object} model.Status
@@ -86,6 +89,7 @@ func(h *Handler) DeleteQuestion(c *gin.Context){
 // @Summary      Savollarni olish
 // @Description  Berilgan ID yoki fan ID bo‘yicha savollarni olish
 // @Tags         Questions
+// @Security     BearerAuth
 // @Produce      json
 // @Param        id query string false "Savol IDsi"
 // @Param        subject_id query string false "Fan IDsi"
@@ -111,6 +115,7 @@ func (h *Handler) GetQuestions(c *gin.Context){
 // @Summary Faylni yuklash va tahlil qilish
 // @Description Foydalanuvchi Excel faylini yuklab, uni serverda qayta ishlash
 // @Tags Files
+// @Security     BearerAuth
 // @Accept multipart/form-data
 // @Produce json
 // @Param file formData file true "Excel fayl"
@@ -153,6 +158,7 @@ func (h *Handler) UploadQuestionsExelFile(c *gin.Context){
 // @Summary Faylni yuklash
 // @Description Rasmni serverga yuklab, Minio'ga saqlaydi va URL qaytaradi
 // @Tags Files
+// @Security     BearerAuth
 // @Accept multipart/form-data
 // @Produce json
 // @Param image formData file true "Yuklanadigan rasm fayli"

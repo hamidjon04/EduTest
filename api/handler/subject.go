@@ -12,6 +12,7 @@ import (
 // @Summary Fan yaratish
 // @Description Yangi fan qo‘shish
 // @Tags Subjects
+// @Security     BearerAuth
 // @Accept json
 // @Produce json
 // @Param request body model.CreateSubjectReq true "Yangi fan ma'lumotlari"
@@ -39,6 +40,7 @@ func (h *Handler) CerateSubject(c *gin.Context) {
 // @Summary Fan nomini yangilash
 // @Description Berilgan ID bo‘yicha fanni yangilaydi
 // @Tags Subjects
+// @Security     BearerAuth
 // @Accept json
 // @Produce json
 // @Param id path string true "Fan IDsi"
@@ -65,6 +67,7 @@ func (h *Handler) UpdateSubject(c *gin.Context) {
 // @Summary Fan(lar) ma'lumotlarini olish
 // @Description Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi
 // @Tags Subjects
+// @Security     BearerAuth
 // @Param id query string false "Fan ID'si (Majburiy emas, agar berilmasa barcha fanlar qaytariladi)"
 // @Success 200 {object} model.GetSubjectsResp "Fanlar ma'lumotlari"
 // @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"

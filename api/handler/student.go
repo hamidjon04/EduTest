@@ -11,6 +11,7 @@ import (
 // @Summary Talaba yaratish
 // @Description Yangi talabani ro‘yxatga olish
 // @Tags Students
+// @Security     BearerAuth
 // @Accept json
 // @Produce json
 // @Param request body model.CreateStudentReq true "Talaba ma'lumotlari"
@@ -38,6 +39,7 @@ func (h *Handler) CreateStudent(c *gin.Context) {
 // @Summary Talaba ma'lumotlarini yangilash
 // @Description Berilgan ID bo‘yicha talabani yangilash
 // @Tags Students
+// @Security     BearerAuth
 // @Accept json
 // @Produce json
 // @Param id path string true "Talabaning unikal ID'si"
@@ -68,6 +70,7 @@ func (h *Handler) UpdateStudent(c *gin.Context) {
 // @Summary Talabani o'chirish
 // @Description Berilgan ID bo‘yicha talabani o‘chirish
 // @Tags Students
+// @Security     BearerAuth
 // @Param id path string true "Talabaning unikal ID'si"
 // @Success 200 {object} model.Status "Muvaffaqiyatli o‘chirildi"
 // @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
@@ -88,6 +91,7 @@ func (h *Handler) DeleteStudent(c *gin.Context) {
 // @Summary Talabalar ma'lumotlarini olish
 // @Description Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish
 // @Tags Students
+// @Security     BearerAuth
 // @Param id query string false "Talabaning unikal ID'si (Majburiy emas, agar berilmasa barcha talabalar qaytariladi)"
 // @Success 200 {object} model.GetStudentsResp "Talabalar ma'lumotlari"
 // @Failure 500 {object} model.Error "Serverda xatolik yuz berdi"
@@ -108,6 +112,7 @@ func (h *Handler) GetStudents(c *gin.Context) {
 // @Summary Get student result
 // @Description Retrieves the result of a student based on student_id and template_id
 // @Tags Students
+// @Security     BearerAuth
 // @Accept  json
 // @Produce  json
 // @Param student_id path string true "Student ID"
@@ -135,6 +140,7 @@ func (h *Handler) GetStudentResult(c *gin.Context){
 // @Summary Talabalarning natijalarini olish
 // @Description Berilgan kun va fanlarga mos keluvchi talabalarning natijalarini qaytaradi
 // @Tags Students
+// @Security     BearerAuth
 // @Accept json
 // @Produce json
 // @Param day query string false "Natija kuni"
@@ -164,6 +170,7 @@ func (h *Handler) GetStudentsResults(c *gin.Context){
 // @Summary Talabalar ro'yxatini yuklash
 // @Description Excel fayl orqali talabalar ma'lumotlarini yuklash
 // @Tags Files
+// @Security     BearerAuth
 // @Accept multipart/form-data
 // @Produce json
 // @Param file formData file true "Excel fayl (XLSX format)"

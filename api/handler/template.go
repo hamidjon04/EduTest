@@ -11,6 +11,7 @@ import (
 // @Summary Template yaratish
 // @Description Yangi test template yaratish
 // @Tags Templates
+// @Security     BearerAuth
 // @Accept json
 // @Produce json
 // @Param template body model.CreateTemplateReq true "Template ma'lumotlari"
@@ -38,6 +39,7 @@ func (h *Handler) CreateTemplate(c *gin.Context) {
 // @Summary      Talabaning test natijalarini tekshirish
 // @Description  Ushbu endpoint talabaga tegishli test javoblarini tekshirish uchun ishlatiladi
 // @Tags         Templates
+// @Security     BearerAuth
 // @Accept       json
 // @Produce      json
 // @Param        request  body  model.CheckStudentTestReq  true  "Talabaning test javoblarini tekshirish uchun ma'lumot"
@@ -68,6 +70,7 @@ func (h *Handler) CheckStudentTest(c *gin.Context) {
 // @Summary     Student shablonini yuklab olish
 // @Description Student ID va sana bo‘yicha shablonni yuklab olish
 // @Tags        Templates
+// @Security     BearerAuth
 // @Accept      json
 // @Produce     octet-stream
 // @Param       student_id query string true "Talaba ID"

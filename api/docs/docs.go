@@ -15,8 +15,59 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/login": {
+            "post": {
+                "description": "Authenticate user and return access/refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "User login",
+                "parameters": [
+                    {
+                        "description": "User credentials",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Tokens"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request format",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found or invalid credentials",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/questions": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID yoki fan ID bo‘yicha savollarni olish",
                 "produces": [
                     "application/json"
@@ -63,6 +114,11 @@ const docTemplate = `{
         },
         "/questions/create": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Yangi savol qo'shish uchun API",
                 "consumes": [
                     "application/json"
@@ -109,6 +165,11 @@ const docTemplate = `{
         },
         "/questions/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID bo‘yicha savolni o‘chirish",
                 "produces": [
                     "application/json"
@@ -144,6 +205,11 @@ const docTemplate = `{
         },
         "/questions/image/upload": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Rasmni serverga yuklab, Minio'ga saqlaydi va URL qaytaradi",
                 "consumes": [
                     "multipart/form-data"
@@ -188,6 +254,11 @@ const docTemplate = `{
         },
         "/questions/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID bo‘yicha savolni yangilash",
                 "consumes": [
                     "application/json"
@@ -241,6 +312,11 @@ const docTemplate = `{
         },
         "/questions/upload": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Foydalanuvchi Excel faylini yuklab, uni serverda qayta ishlash",
                 "consumes": [
                     "multipart/form-data"
@@ -283,8 +359,104 @@ const docTemplate = `{
                 }
             }
         },
+        "/refresh-token": {
+            "get": {
+                "description": "Get a new access token using refresh token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh access token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh Token",
+                        "name": "refresh_token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Token"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid or expired refresh token",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "description": "Register a new user with necessary credentials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "User registration",
+                "parameters": [
+                    {
+                        "description": "User registration data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.RegisterReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Tokens"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request: invalid input",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/students": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish",
                 "tags": [
                     "Students"
@@ -316,6 +488,11 @@ const docTemplate = `{
         },
         "/students/create": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Yangi talabani ro‘yxatga olish",
                 "consumes": [
                     "application/json"
@@ -362,6 +539,11 @@ const docTemplate = `{
         },
         "/students/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID bo‘yicha talabani o‘chirish",
                 "tags": [
                     "Students"
@@ -394,6 +576,11 @@ const docTemplate = `{
         },
         "/students/results": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan kun va fanlarga mos keluvchi talabalarning natijalarini qaytaradi",
                 "consumes": [
                     "application/json"
@@ -443,6 +630,11 @@ const docTemplate = `{
         },
         "/students/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID bo‘yicha talabani yangilash",
                 "consumes": [
                     "application/json"
@@ -496,6 +688,11 @@ const docTemplate = `{
         },
         "/students/upload": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Excel fayl orqali talabalar ma'lumotlarini yuklash",
                 "consumes": [
                     "multipart/form-data"
@@ -540,6 +737,11 @@ const docTemplate = `{
         },
         "/students/{student_id}/result": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Retrieves the result of a student based on student_id and template_id",
                 "consumes": [
                     "application/json"
@@ -584,6 +786,11 @@ const docTemplate = `{
         },
         "/subjects/create": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Yangi fan qo‘shish",
                 "consumes": [
                     "application/json"
@@ -630,6 +837,11 @@ const docTemplate = `{
         },
         "/subjects/get": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Agar ID berilsa, shu fanni, aks holda barcha fanlarni qaytaradi",
                 "tags": [
                     "Subjects"
@@ -661,6 +873,11 @@ const docTemplate = `{
         },
         "/subjects/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Berilgan ID bo‘yicha fanni yangilaydi",
                 "consumes": [
                     "application/json"
@@ -706,6 +923,11 @@ const docTemplate = `{
         },
         "/templates/check": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Ushbu endpoint talabaga tegishli test javoblarini tekshirish uchun ishlatiladi",
                 "consumes": [
                     "application/json"
@@ -752,6 +974,11 @@ const docTemplate = `{
         },
         "/templates/create": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Yangi test template yaratish",
                 "consumes": [
                     "application/json"
@@ -798,6 +1025,11 @@ const docTemplate = `{
         },
         "/templates/get": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Student ID va sana bo‘yicha shablonni yuklab olish",
                 "consumes": [
                     "application/json"
@@ -1022,6 +1254,17 @@ const docTemplate = `{
                 }
             }
         },
+        "model.LoginReq": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Option": {
             "type": "object",
             "properties": {
@@ -1107,6 +1350,23 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/model.Incorrect"
                     }
+                }
+            }
+        },
+        "model.RegisterReq": {
+            "type": "object",
+            "properties": {
+                "lastname": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         },
@@ -1235,6 +1495,28 @@ const docTemplate = `{
                 }
             }
         },
+        "model.Token": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Tokens": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
         "model.UpdateQuestionReq": {
             "type": "object",
             "properties": {
@@ -1280,6 +1562,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Tokenni faqat o‘zi yozing, masalan: eyJhbGciOiJIUzI1NiIs..",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

@@ -3,6 +3,7 @@ package api
 import (
 	"edutest/api/handler"
 	"edutest/api/middleware"
+	"edutest/pkg/config"
 	"edutest/service"
 	"log/slog"
 
@@ -13,12 +14,21 @@ import (
 	"github.com/swaggo/gin-swagger"
 )
 
-func Router(service service.Service, log *slog.Logger) *gin.Engine {
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Tokenni faqat o‘zi yozing, masalan: eyJhbGciOiJIUzI1NiIs..
+func Router(service service.Service, log *slog.Logger, cfg config.Config) *gin.Engine {
 	router := gin.Default()
 	router.Use(middleware.CORSMiddleware())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	h := handler.NewHandler(service, log)
 
+	router.POST("/register", h.Register)
+	router.POST("/login", h.Login)
+	router.GET("/refresh-token", h.RefreshToken)
+
+	router.Use(middleware.AuthMiddleware(cfg.JWT_KEY))
 	students := router.Group("/students")
 	{
 		students.POST("/create", h.CreateStudent)
