@@ -14,7 +14,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "User login",
                 "parameters": [
@@ -358,7 +358,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "Refresh access token",
                 "parameters": [
@@ -403,7 +403,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "Auth"
                 ],
                 "summary": "User registration",
                 "parameters": [

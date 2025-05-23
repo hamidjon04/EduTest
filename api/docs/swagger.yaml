@@ -342,7 +342,7 @@ paths:
             $ref: '#/definitions/model.Error'
       summary: User login
       tags:
-      - auth
+      - Auth
   /questions:
     get:
       description: Berilgan ID yoki fan ID bo‘yicha savollarni olish
@@ -560,7 +560,7 @@ paths:
             $ref: '#/definitions/model.Error'
       summary: Refresh access token
       tags:
-      - auth
+      - Auth
   /register:
     post:
       consumes:
@@ -590,7 +590,7 @@ paths:
             $ref: '#/definitions/model.Error'
       summary: User registration
       tags:
-      - auth
+      - Auth
   /students:
     get:
       description: Berilgan ID bo‘yicha talabani yoki barcha talabalarni olish

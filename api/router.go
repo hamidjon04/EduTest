@@ -25,8 +25,9 @@ func Router(service service.Service, log *slog.Logger, cfg config.Config) *gin.E
 	h := handler.NewHandler(service, log)
 
 	router.POST("/register", h.Register)
-	router.POST("/login", h.Login)
+	router.POST("/login", h.Login)	
 	router.GET("/refresh-token", h.RefreshToken)
+	
 
 	router.Use(middleware.AuthMiddleware(cfg.JWT_KEY))
 	students := router.Group("/students")
