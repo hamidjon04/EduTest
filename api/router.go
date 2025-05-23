@@ -29,7 +29,7 @@ func Router(service service.Service, log *slog.Logger, cfg config.Config) *gin.E
 	router.GET("/refresh-token", h.RefreshToken)
 	
 
-	router.Use(middleware.AuthMiddleware(cfg.JWT_KEY))
+	// router.Use(middleware.AuthMiddleware(cfg.JWT_KEY))
 	students := router.Group("/students")
 	{
 		students.POST("/create", h.CreateStudent)
