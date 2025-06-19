@@ -1,4 +1,13 @@
 definitions:
+  model.CheckReq:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/model.QuestionAnswer'
+        type: array
+      template_id:
+        type: string
+    type: object
   model.CheckStudentTestReq:
     properties:
       answers:
@@ -102,6 +111,15 @@ definitions:
         items:
           $ref: '#/definitions/model.Subject'
         type: array
+    type: object
+  model.GetTestResp:
+    properties:
+      question:
+        items:
+          $ref: '#/definitions/model.Question'
+        type: array
+      test_id:
+        type: string
     type: object
   model.Incorrect:
     properties:
@@ -265,6 +283,13 @@ definitions:
         type: string
       name:
         type: string
+    type: object
+  model.TestResult:
+    properties:
+      correct:
+        type: integer
+      uncorrect:
+        type: integer
     type: object
   model.Token:
     properties:
@@ -990,6 +1015,76 @@ paths:
       summary: Student shablonini yuklab olish
       tags:
       - Templates
+  /tests/check:
+    post:
+      consumes:
+      - application/json
+      description: Foydalanuvchidan kelgan javoblarni tekshiradi va natijani qaytaradi
+      parameters:
+      - description: Foydalanuvchining test javoblari
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.CheckReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Test natijasi
+          schema:
+            $ref: '#/definitions/model.TestResult'
+        "400":
+          description: Noto'g'ri ma'lumot
+          schema:
+            $ref: '#/definitions/model.Error'
+        "500":
+          description: Server xatosi
+          schema:
+            $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
+      summary: Test natijasini tekshirish
+      tags:
+      - test
+  /tests/get:
+    get:
+      consumes:
+      - application/json
+      description: Berilgan foydalanuvchi va fan uchun test savollarini olish (tasodifiy
+        tanlanadi)
+      parameters:
+      - description: Foydalanuvchi IDsi
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: Fan IDsi
+        in: query
+        name: subject_id
+        required: true
+        type: string
+      - description: Nechta savol kerakligi (soni)
+        in: query
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Savollar ro'yxati
+          schema:
+            $ref: '#/definitions/model.GetTestResp'
+        "500":
+          description: Server xatosi haqida ma'lumot
+          schema:
+            $ref: '#/definitions/model.Error'
+      security:
+      - BearerAuth: []
+      summary: Test uchun savollarni olish
+      tags:
+      - test
 securityDefinitions:
   BearerAuth:
     description: 'Tokenni faqat o‘zi yozing, masalan: eyJhbGciOiJIUzI1NiIs..'

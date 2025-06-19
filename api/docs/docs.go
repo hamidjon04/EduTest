@@ -1078,9 +1078,131 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/tests/check": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Foydalanuvchidan kelgan javoblarni tekshiradi va natijani qaytaradi",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Test natijasini tekshirish",
+                "parameters": [
+                    {
+                        "description": "Foydalanuvchining test javoblari",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.CheckReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Test natijasi",
+                        "schema": {
+                            "$ref": "#/definitions/model.TestResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Noto'g'ri ma'lumot",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Server xatosi",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/tests/get": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Berilgan foydalanuvchi va fan uchun test savollarini olish (tasodifiy tanlanadi)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "test"
+                ],
+                "summary": "Test uchun savollarni olish",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Foydalanuvchi IDsi",
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fan IDsi",
+                        "name": "subject_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Nechta savol kerakligi (soni)",
+                        "name": "count",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Savollar ro'yxati",
+                        "schema": {
+                            "$ref": "#/definitions/model.GetTestResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Server xatosi haqida ma'lumot",
+                        "schema": {
+                            "$ref": "#/definitions/model.Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "model.CheckReq": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.QuestionAnswer"
+                    }
+                },
+                "template_id": {
+                    "type": "string"
+                }
+            }
+        },
         "model.CheckStudentTestReq": {
             "type": "object",
             "properties": {
@@ -1240,6 +1362,20 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/model.Subject"
                     }
+                }
+            }
+        },
+        "model.GetTestResp": {
+            "type": "object",
+            "properties": {
+                "question": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Question"
+                    }
+                },
+                "test_id": {
+                    "type": "string"
                 }
             }
         },
@@ -1492,6 +1628,17 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "model.TestResult": {
+            "type": "object",
+            "properties": {
+                "correct": {
+                    "type": "integer"
+                },
+                "uncorrect": {
+                    "type": "integer"
                 }
             }
         },
