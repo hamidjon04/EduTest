@@ -1,0 +1,2 @@
+ALTER TABLE templte_answers
+DROP CONSTRAINT templte_answers_template_id_fkey;
