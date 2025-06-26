@@ -114,6 +114,17 @@ type Question struct {
 	AnswerImageUrl   string `json:"answer_image_url"`
 }
 
+type QuestionTest struct {
+	Id               string `josn:"id"`
+	Nomer            int    `json:"nomer"`
+	SubjectId        string `json:"subject_id"`
+	Type             string `json:"type"`
+	QuestionText     string `json:"question_text"`
+	Options          Option `json:"options"`
+	QuestionImageUrl string `json:"question_image_url"`
+	OptionImageUrl   Option `json:"option_image_url"`
+}
+
 type GetQuestionsResp struct {
 	Questions []Question `json:"questions"`
 }
@@ -239,13 +250,13 @@ type StudentsStatus struct {
 	IncorrectStudents []Student `json:"incorrect_students"`
 }
 
-type Incorrect struct{
-	Nomer int `json:"nomer"`
-	Name string `json:"name"`
+type Incorrect struct {
+	Nomer int    `json:"nomer"`
+	Name  string `json:"name"`
 }
 
 type QuestionsStatus struct {
-	Correct            int        `json:"correct"`
-	Incorrect          int        `json:"incorrect"`
+	Correct            int         `json:"correct"`
+	Incorrect          int         `json:"incorrect"`
 	IncorrectQuestions []Incorrect `json:"incorrect_questions"`
 }

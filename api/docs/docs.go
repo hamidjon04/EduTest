@@ -1198,7 +1198,7 @@ const docTemplate = `{
                         "$ref": "#/definitions/model.QuestionAnswer"
                     }
                 },
-                "template_id": {
+                "test_id": {
                     "type": "string"
                 }
             }
@@ -1371,7 +1371,7 @@ const docTemplate = `{
                 "question": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Question"
+                        "$ref": "#/definitions/model.QuestionTest"
                     }
                 },
                 "test_id": {
@@ -1469,6 +1469,35 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "boolean"
+                }
+            }
+        },
+        "model.QuestionTest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "nomer": {
+                    "type": "integer"
+                },
+                "option_image_url": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "options": {
+                    "$ref": "#/definitions/model.Option"
+                },
+                "question_image_url": {
+                    "type": "string"
+                },
+                "question_text": {
+                    "type": "string"
+                },
+                "subject_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },
@@ -1637,8 +1666,17 @@ const docTemplate = `{
                 "correct": {
                     "type": "integer"
                 },
-                "uncorrect": {
+                "incorrect": {
                     "type": "integer"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.QuestionResult"
+                    }
+                },
+                "test_id": {
+                    "type": "string"
                 }
             }
         },

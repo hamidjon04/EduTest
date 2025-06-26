@@ -5,7 +5,7 @@ definitions:
         items:
           $ref: '#/definitions/model.QuestionAnswer'
         type: array
-      template_id:
+      test_id:
         type: string
     type: object
   model.CheckStudentTestReq:
@@ -116,7 +116,7 @@ definitions:
     properties:
       question:
         items:
-          $ref: '#/definitions/model.Question'
+          $ref: '#/definitions/model.QuestionTest'
         type: array
       test_id:
         type: string
@@ -180,6 +180,25 @@ definitions:
         type: integer
       status:
         type: boolean
+    type: object
+  model.QuestionTest:
+    properties:
+      id:
+        type: string
+      nomer:
+        type: integer
+      option_image_url:
+        $ref: '#/definitions/model.Option'
+      options:
+        $ref: '#/definitions/model.Option'
+      question_image_url:
+        type: string
+      question_text:
+        type: string
+      subject_id:
+        type: string
+      type:
+        type: string
     type: object
   model.QuestionsStatus:
     properties:
@@ -288,8 +307,14 @@ definitions:
     properties:
       correct:
         type: integer
-      uncorrect:
+      incorrect:
         type: integer
+      results:
+        items:
+          $ref: '#/definitions/model.QuestionResult'
+        type: array
+      test_id:
+        type: string
     type: object
   model.Token:
     properties:
