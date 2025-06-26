@@ -97,6 +97,6 @@ func (s *Service) CheckTest(req model.CheckReq) (*model.TestResult, error) {
 		TestId:    req.TestId,
 		Results:   results,
 		Correct:   result.Correct,
-		Incorrect: result.InCorrect,
+		Incorrect: len(results)-result.Correct,
 	}, nil
 }
