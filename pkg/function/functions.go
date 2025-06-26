@@ -14,7 +14,16 @@ func RandomOptions(questions []model.Question) ([]model.Question, map[int]string
 
 	for i := 0; i < len(questions); i++ {
 		var options = []string{questions[i].Options.A, questions[i].Options.B, questions[i].Options.C, questions[i].Options.D}
-
+		var answer string
+		if questions[i].Answer == "a"{
+			answer = questions[i].Options.A
+		}else if questions[i].Answer == "b"{
+			answer = questions[i].Options.B
+		}else if questions[i].Answer == "c"{
+			answer = questions[i].Options.C
+		}else if questions[i].Answer == "d"{
+			answer = questions[i].Options.D
+		}
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		r.Shuffle(len(options), func(i, j int) {
 			options[i], options[j] = options[j], options[i]
@@ -26,7 +35,7 @@ func RandomOptions(questions []model.Question) ([]model.Question, map[int]string
 		questions[i].Options.D = options[3]
 
 		for j, v := range options {
-			if v == questions[i].Answer {
+			if v == answer {
 				answers[i+1] = string(rune(65 + j))
 				break
 			}
