@@ -89,8 +89,8 @@ func (s *Service) CheckTest(req model.CheckReq) (*model.TestResult, error) {
 		}
 		if !numbers[i] {
 			questionResult.Status = false
+			results = append(results, questionResult)
 		}
-		results = append(results, questionResult)
 	}
 
 	return &model.TestResult{
