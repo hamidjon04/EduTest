@@ -4,6 +4,7 @@ import (
 	"edutest/pkg/function"
 	"edutest/pkg/model"
 	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -72,7 +73,7 @@ func (s *Service) CheckTest(req model.CheckReq) (*model.TestResult, error) {
 		var questionResult = model.QuestionResult{
 			Number: j.Number,
 		}
-		if answers[j.Number] == j.Answer {
+		if strings.ToUpper(answers[j.Number]) == strings.ToUpper(j.Answer) {
 			result.Correct++
 			questionResult.Status = true
 		} else {
